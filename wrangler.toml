@@ -1,22 +1,18 @@
-# Cloudflare Pages + Wrangler Configuration
-# Docs: https://developers.cloudflare.com/pages/platform/functions/wrangler-configuration/
+# Cloudflare Pages — Static Site Deployment
+# This is a Vite static website. No Worker code required.
+# Deploy via Cloudflare Pages dashboard or `wrangler pages deploy dist`
 
-name = "security-website"
-
-# ── Pages ────────────────────────────────────────────
-pages_build_output_dir = "dist"
-
-# ── Compatibility ────────────────────────────────────
+name = "alqudabea-security-website"
 compatibility_date = "2026-07-28"
-compatibility_flags = ["nodejs_compat"]
 
-# ── Environment Variables (non-secret) ───────────────
-# Secrets must be set via `wrangler pages secret put <KEY>` or the CF dashboard.
-# Non-secret vars below are bundled at build time by Vite via import.meta.env.
+# Static asset directory (Vite output)
+[assets]
+directory = "./dist"
+
+# Environment variables (non-secret, bundled by Vite at build time)
 [vars]
 NODE_ENV = "production"
 
-# ── Environments ─────────────────────────────────────
 [env.production]
 vars = { NODE_ENV = "production" }
 
