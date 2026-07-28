@@ -1,0 +1,718 @@
+/* ── Tailwind v4 ──────────────────────────────────────── */
+@import 'tailwindcss';
+
+/* ── Fonts ────────────────────────────────────────────── */
+@import '@fontsource/inter/index.css';
+@import '@fontsource/inter/400.css';
+@import '@fontsource/inter/500.css';
+@import '@fontsource/inter/600.css';
+@import '@fontsource/inter/700.css';
+@import '@fontsource/jetbrains-mono/index.css';
+@import '@fontsource/jetbrains-mono/400.css';
+@import '@fontsource/jetbrains-mono/500.css';
+@import '@fontsource/jetbrains-mono/700.css';
+
+/* ═════════════════════════════════════════════════════════
+   APPLE ADAPTIVE DESIGN SYSTEM
+   ═════════════════════════════════════════════════════════ */
+
+/* ── Theme Root (Light Default) ────────────────────────── */
+:root,
+[data-theme='light'] {
+  /* ── Surfaces ──────────────────────── */
+  --color-surface-root: #FFFFFF;
+  --color-surface-raised: #F5F5F7;
+  --color-surface-overlay: #EBEBED;
+  --color-surface-muted: #F9F9FB;
+  --color-surface-glass: oklch(1 0 0 / 0.72);
+
+  /* ── Text — Apple Premium Black ─────── */
+  --color-text-primary: #111111;
+  --color-text-secondary: #1A1A1A;
+  --color-text-body: #202124;
+  --color-text-small: #2B2B2B;
+  --color-text-muted: #4B5563;
+  --color-text-caption: #5F6368;
+  --color-text-inverse: #FFFFFF;
+
+  /* ── Links ─────────────────────────── */
+  --color-link-default: #111827;
+  --color-link-hover: #0071E3;
+  --color-link-active: #005FCC;
+
+  /* ── Borders ───────────────────────── */
+  --color-border-default: #CECED2;
+  --color-border-muted: #E0E0E5;
+  --color-border-accent: #0066CC;
+
+  /* ── Accent (Apple Blue) ───────────── */
+  --color-accent-50: oklch(0.97 0.02 255);
+  --color-accent-100: oklch(0.93 0.05 255);
+  --color-accent-200: oklch(0.87 0.1 255);
+  --color-accent-300: oklch(0.78 0.15 255);
+  --color-accent-400: oklch(0.65 0.2 255);
+  --color-accent-500: #0071E3;
+  --color-accent-600: #0066CC;
+  --color-accent-700: #0055B3;
+  --color-accent-800: oklch(0.35 0.15 255);
+  --color-accent-900: oklch(0.25 0.08 255);
+  --color-accent-950: oklch(0.15 0.04 255);
+
+  /* ── Cyan ───────────────────────────── */
+  --color-cyan-50: oklch(0.97 0.01 195);
+  --color-cyan-100: oklch(0.92 0.04 195);
+  --color-cyan-200: oklch(0.85 0.08 195);
+  --color-cyan-300: oklch(0.75 0.12 195);
+  --color-cyan-400: oklch(0.65 0.15 195);
+  --color-cyan-500: oklch(0.55 0.17 195);
+  --color-cyan-600: oklch(0.45 0.17 195);
+  --color-cyan-700: oklch(0.35 0.14 195);
+  --color-cyan-800: oklch(0.25 0.1 195);
+  --color-cyan-900: oklch(0.18 0.06 195);
+  --color-cyan-950: oklch(0.12 0.03 195);
+
+  /* ── Success ────────────────────────── */
+  --color-success-50: oklch(0.97 0.02 155);
+  --color-success-100: oklch(0.92 0.05 155);
+  --color-success-200: oklch(0.85 0.1 155);
+  --color-success-300: oklch(0.75 0.15 155);
+  --color-success-400: oklch(0.65 0.2 155);
+  --color-success-500: #34C759;
+  --color-success-600: oklch(0.48 0.22 155);
+  --color-success-700: oklch(0.38 0.17 155);
+  --color-success-800: oklch(0.28 0.1 155);
+  --color-success-900: oklch(0.2 0.06 155);
+  --color-success-950: oklch(0.12 0.03 155);
+
+  /* ── Warning ────────────────────────── */
+  --color-warning-50: oklch(0.97 0.03 85);
+  --color-warning-100: oklch(0.93 0.08 85);
+  --color-warning-200: oklch(0.87 0.15 85);
+  --color-warning-300: oklch(0.8 0.2 85);
+  --color-warning-400: oklch(0.72 0.22 85);
+  --color-warning-500: #FF9F0A;
+  --color-warning-600: oklch(0.55 0.2 85);
+  --color-warning-700: oklch(0.42 0.16 85);
+  --color-warning-800: oklch(0.3 0.1 85);
+  --color-warning-900: oklch(0.2 0.06 85);
+  --color-warning-950: oklch(0.12 0.03 85);
+
+  /* ── Danger ─────────────────────────── */
+  --color-danger-50: oklch(0.97 0.02 20);
+  --color-danger-100: oklch(0.93 0.05 20);
+  --color-danger-200: oklch(0.87 0.1 20);
+  --color-danger-300: oklch(0.78 0.17 20);
+  --color-danger-400: oklch(0.68 0.22 20);
+  --color-danger-500: #FF3B30;
+  --color-danger-600: oklch(0.48 0.22 20);
+  --color-danger-700: oklch(0.38 0.17 20);
+  --color-danger-800: oklch(0.28 0.1 20);
+  --color-danger-900: oklch(0.2 0.06 20);
+  --color-danger-950: oklch(0.12 0.03 20);
+
+  /* ── Shadows (Light) ────────────────── */
+  --shadow-surface: 0 1px 3px 0 oklch(0 0 0 / 0.06);
+  --shadow-raised: 0 4px 16px 0 oklch(0 0 0 / 0.08);
+  --shadow-overlay: 0 8px 32px 0 oklch(0 0 0 / 0.12);
+  --shadow-glow-accent: 0 0 24px 0 oklch(0.55 0.22 255 / 0.18);
+  --shadow-glow-success: 0 0 24px 0 oklch(0.55 0.22 155 / 0.18);
+  --shadow-glow-danger: 0 0 24px 0 oklch(0.58 0.25 20 / 0.18);
+
+  /* ── Glass (Light) ──────────────────── */
+  --glass-bg: oklch(1 0 0 / 0.72);
+  --glass-border: oklch(0 0 0 / 0.08);
+  --glass-blur: blur(20px);
+}
+
+/* ── Dark Theme ────────────────────────────────────────── */
+[data-theme='dark'] {
+  /* ── Surfaces (OLED-friendly) ──────── */
+  --color-surface-root: #000000;
+  --color-surface-raised: #1C1C1E;
+  --color-surface-overlay: #2C2C2E;
+  --color-surface-muted: #111113;
+  --color-surface-glass: oklch(0.12 0.01 260 / 0.78);
+
+  /* ── Text — Apple Premium White ─────── */
+  --color-text-primary: #F5F5F7;
+  --color-text-secondary: #D1D5DB;
+  --color-text-body: #D1D1D6;
+  --color-text-small: #B0B0B8;
+  --color-text-muted: #A1A1AA;
+  --color-text-caption: #98989D;
+  --color-text-inverse: #000000;
+
+  /* ── Links (Dark) ───────────────────── */
+  --color-link-default: #E5E5EA;
+  --color-link-hover: #2997FF;
+  --color-link-active: #40A5FF;
+
+  /* ── Borders ───────────────────────── */
+  --color-border-default: #38383A;
+  --color-border-muted: #2C2C2E;
+  --color-border-accent: #2997FF;
+
+  /* ── Accent (Apple Blue — Dark) ────── */
+  --color-accent-50: oklch(0.15 0.04 255);
+  --color-accent-100: oklch(0.18 0.06 255);
+  --color-accent-200: oklch(0.22 0.08 255);
+  --color-accent-300: oklch(0.3 0.12 255);
+  --color-accent-400: oklch(0.45 0.18 255);
+  --color-accent-500: #2997FF;
+  --color-accent-600: #40A5FF;
+  --color-accent-700: oklch(0.65 0.2 255);
+  --color-accent-800: oklch(0.75 0.15 255);
+  --color-accent-900: oklch(0.85 0.08 255);
+  --color-accent-950: oklch(0.93 0.03 255);
+
+  /* ── Cyan (Dark) ───────────────────── */
+  --color-cyan-50: oklch(0.12 0.03 195);
+  --color-cyan-100: oklch(0.18 0.06 195);
+  --color-cyan-200: oklch(0.25 0.1 195);
+  --color-cyan-300: oklch(0.35 0.14 195);
+  --color-cyan-400: oklch(0.45 0.17 195);
+  --color-cyan-500: oklch(0.55 0.17 195);
+  --color-cyan-600: oklch(0.65 0.15 195);
+  --color-cyan-700: oklch(0.75 0.12 195);
+  --color-cyan-800: oklch(0.85 0.08 195);
+  --color-cyan-900: oklch(0.92 0.04 195);
+  --color-cyan-950: oklch(0.97 0.01 195);
+
+  /* ── Success (Dark) ────────────────── */
+  --color-success-50: oklch(0.12 0.03 155);
+  --color-success-100: oklch(0.18 0.06 155);
+  --color-success-200: oklch(0.25 0.1 155);
+  --color-success-300: oklch(0.35 0.16 155);
+  --color-success-400: oklch(0.48 0.22 155);
+  --color-success-500: #32D74B;
+  --color-success-600: oklch(0.65 0.2 155);
+  --color-success-700: oklch(0.75 0.15 155);
+  --color-success-800: oklch(0.85 0.1 155);
+  --color-success-900: oklch(0.92 0.05 155);
+  --color-success-950: oklch(0.97 0.02 155);
+
+  /* ── Warning (Dark) ────────────────── */
+  --color-warning-50: oklch(0.12 0.03 85);
+  --color-warning-100: oklch(0.18 0.06 85);
+  --color-warning-200: oklch(0.25 0.1 85);
+  --color-warning-300: oklch(0.35 0.16 85);
+  --color-warning-400: oklch(0.48 0.22 85);
+  --color-warning-500: #FF9F0A;
+  --color-warning-600: oklch(0.65 0.2 85);
+  --color-warning-700: oklch(0.75 0.12 85);
+  --color-warning-800: oklch(0.85 0.08 85);
+  --color-warning-900: oklch(0.92 0.04 85);
+  --color-warning-950: oklch(0.97 0.02 85);
+
+  /* ── Danger (Dark) ─────────────────── */
+  --color-danger-50: oklch(0.12 0.03 20);
+  --color-danger-100: oklch(0.18 0.06 20);
+  --color-danger-200: oklch(0.25 0.1 20);
+  --color-danger-300: oklch(0.35 0.16 20);
+  --color-danger-400: oklch(0.48 0.22 20);
+  --color-danger-500: #FF453A;
+  --color-danger-600: oklch(0.65 0.22 20);
+  --color-danger-700: oklch(0.75 0.17 20);
+  --color-danger-800: oklch(0.85 0.1 20);
+  --color-danger-900: oklch(0.92 0.05 20);
+  --color-danger-950: oklch(0.97 0.02 20);
+
+  /* ── Shadows (Dark — deeper) ───────── */
+  --shadow-surface: 0 1px 3px 0 oklch(0 0 0 / 0.4);
+  --shadow-raised: 0 4px 16px 0 oklch(0 0 0 / 0.5);
+  --shadow-overlay: 0 8px 32px 0 oklch(0 0 0 / 0.6);
+  --shadow-glow-accent: 0 0 28px 0 oklch(0.55 0.22 255 / 0.35);
+  --shadow-glow-success: 0 0 28px 0 oklch(0.55 0.22 155 / 0.35);
+  --shadow-glow-danger: 0 0 28px 0 oklch(0.58 0.25 20 / 0.35);
+
+  /* ── Glass (Dark) ──────────────────── */
+  --glass-bg: oklch(0.12 0.01 260 / 0.78);
+  --glass-border: oklch(1 0 0 / 0.08);
+  --glass-blur: blur(24px);
+}
+
+/* ── Theme-Aware Semantic Tokens ───────────────────────── */
+/* These map theme colors to Tailwind-compatible tokens      */
+
+@theme {
+  /* ── Typography ────────────────────── */
+  --font-family-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', ui-sans-serif, system-ui, sans-serif;
+  --font-family-mono: 'JetBrains Mono', 'SF Mono', ui-monospace, monospace;
+
+  /* ── Surfaces ──────────────────────── */
+  --color-surface-root: var(--color-surface-root);
+  --color-surface-raised: var(--color-surface-raised);
+  --color-surface-overlay: var(--color-surface-overlay);
+  --color-surface-muted: var(--color-surface-muted);
+
+  /* ── Text ──────────────────────────── */
+  --color-text-primary: var(--color-text-primary);
+  --color-text-secondary: var(--color-text-secondary);
+  --color-text-body: var(--color-text-body);
+  --color-text-small: var(--color-text-small);
+  --color-text-muted: var(--color-text-muted);
+  --color-text-inverse: var(--color-text-inverse);
+
+  /* ── Borders ───────────────────────── */
+  --color-border-default: var(--color-border-default);
+  --color-border-muted: var(--color-border-muted);
+  --color-border-accent: var(--color-border-accent);
+
+  /* ── Accent / Brand ────────────────── */
+  --color-accent-50: var(--color-accent-50);
+  --color-accent-100: var(--color-accent-100);
+  --color-accent-200: var(--color-accent-200);
+  --color-accent-300: var(--color-accent-300);
+  --color-accent-400: var(--color-accent-400);
+  --color-accent-500: var(--color-accent-500);
+  --color-accent-600: var(--color-accent-600);
+  --color-accent-700: var(--color-accent-700);
+  --color-accent-800: var(--color-accent-800);
+  --color-accent-900: var(--color-accent-900);
+  --color-accent-950: var(--color-accent-950);
+
+  /* ── Cyan ──────────────────────────── */
+  --color-cyan-50: var(--color-cyan-50);
+  --color-cyan-100: var(--color-cyan-100);
+  --color-cyan-200: var(--color-cyan-200);
+  --color-cyan-300: var(--color-cyan-300);
+  --color-cyan-400: var(--color-cyan-400);
+  --color-cyan-500: var(--color-cyan-500);
+  --color-cyan-600: var(--color-cyan-600);
+  --color-cyan-700: var(--color-cyan-700);
+  --color-cyan-800: var(--color-cyan-800);
+  --color-cyan-900: var(--color-cyan-900);
+  --color-cyan-950: var(--color-cyan-950);
+
+  /* ── Success ───────────────────────── */
+  --color-success-50: var(--color-success-50);
+  --color-success-100: var(--color-success-100);
+  --color-success-200: var(--color-success-200);
+  --color-success-300: var(--color-success-300);
+  --color-success-400: var(--color-success-400);
+  --color-success-500: var(--color-success-500);
+  --color-success-600: var(--color-success-600);
+  --color-success-700: var(--color-success-700);
+  --color-success-800: var(--color-success-800);
+  --color-success-900: var(--color-success-900);
+  --color-success-950: var(--color-success-950);
+
+  /* ── Warning ───────────────────────── */
+  --color-warning-50: var(--color-warning-50);
+  --color-warning-100: var(--color-warning-100);
+  --color-warning-200: var(--color-warning-200);
+  --color-warning-300: var(--color-warning-300);
+  --color-warning-400: var(--color-warning-400);
+  --color-warning-500: var(--color-warning-500);
+  --color-warning-600: var(--color-warning-600);
+  --color-warning-700: var(--color-warning-700);
+  --color-warning-800: var(--color-warning-800);
+  --color-warning-900: var(--color-warning-900);
+  --color-warning-950: var(--color-warning-950);
+
+  /* ── Danger ────────────────────────── */
+  --color-danger-50: var(--color-danger-50);
+  --color-danger-100: var(--color-danger-100);
+  --color-danger-200: var(--color-danger-200);
+  --color-danger-300: var(--color-danger-300);
+  --color-danger-400: var(--color-danger-400);
+  --color-danger-500: var(--color-danger-500);
+  --color-danger-600: var(--color-danger-600);
+  --color-danger-700: var(--color-danger-700);
+  --color-danger-800: var(--color-danger-800);
+  --color-danger-900: var(--color-danger-900);
+  --color-danger-950: var(--color-danger-950);
+
+  /* ── Neutrals (semantic aliases) ───── */
+  --color-neutral-100: var(--color-text-primary);
+  --color-neutral-200: var(--color-text-secondary);
+  --color-neutral-300: var(--color-text-body);
+  --color-neutral-400: var(--color-text-small);
+  --color-neutral-500: var(--color-text-muted);
+  --color-neutral-600: var(--color-text-caption);
+  --color-neutral-700: var(--color-text-caption);
+
+  /* ── Border Radius ─────────────────── */
+  --radius-xs: 0.25rem;
+  --radius-sm: 0.375rem;
+  --radius-md: 0.625rem;
+  --radius-lg: 0.875rem;
+  --radius-xl: 1.125rem;
+  --radius-2xl: 1.5rem;
+  --radius-3xl: 2rem;
+
+  /* ── Shadows ───────────────────────── */
+  --shadow-surface: var(--shadow-surface);
+  --shadow-raised: var(--shadow-raised);
+  --shadow-overlay: var(--shadow-overlay);
+  --shadow-glow-accent: var(--shadow-glow-accent);
+  --shadow-glow-success: var(--shadow-glow-success);
+  --shadow-glow-danger: var(--shadow-glow-danger);
+
+  /* ── Animations ────────────────────── */
+  --animate-fade-in: fade-in 0.35s ease-out;
+  --animate-fade-up: fade-up 0.45s ease-out;
+  --animate-scale-in: scale-in 0.35s ease-out;
+  --animate-slide-in-right: slide-in-right 0.35s ease-out;
+  --animate-pulse-glow: pulse-glow 2.5s ease-in-out infinite;
+  --animate-float: float 6s ease-in-out infinite;
+}
+
+/* ── Theme-Aware Utility Classes ───────────────────────── */
+/* Fallback classes for direct use without Tailwind tokens    */
+
+@layer utilities {
+
+  /* Surface background utilities */
+  .bg-theme-root {
+    background-color: var(--color-surface-root);
+  }
+  .bg-theme-raised {
+    background-color: var(--color-surface-raised);
+  }
+  .bg-theme-overlay {
+    background-color: var(--color-surface-overlay);
+  }
+  .bg-theme-muted {
+    background-color: var(--color-surface-muted);
+  }
+  .bg-theme-glass {
+    background-color: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+  }
+
+  /* Text utilities */
+  .text-theme-primary { color: var(--color-text-primary); }
+  .text-theme-secondary { color: var(--color-text-secondary); }
+  .text-theme-body { color: var(--color-text-body); }
+  .text-theme-small { color: var(--color-text-small); }
+  .text-theme-muted { color: var(--color-text-muted); }
+  .text-theme-inverse { color: var(--color-text-inverse); }
+
+  /* Border utilities */
+  .border-theme {
+    border-color: var(--color-border-default);
+  }
+  .border-theme-muted {
+    border-color: var(--color-border-muted);
+  }
+  .border-theme-accent {
+    border-color: var(--color-border-accent);
+  }
+
+  /* Shadow utilities */
+  .shadow-theme-surface {
+    box-shadow: var(--shadow-surface);
+  }
+  .shadow-theme-raised {
+    box-shadow: var(--shadow-raised);
+  }
+  .shadow-theme-overlay {
+    box-shadow: var(--shadow-overlay);
+  }
+
+  /* Focus ring — Apple style */
+  .focus-ring {
+    outline: none;
+  }
+  .focus-ring:focus-visible {
+    box-shadow: 0 0 0 3px var(--color-accent-500);
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+  }
+}
+
+/* ── Premium Interaction States ─────────────────────────── */
+
+.card-premium:hover {
+  transform: translateY(-3px);
+  border-color: var(--color-accent-400);
+  box-shadow: 0 0 30px oklch(0.55 0.22 255 / 0.2), 0 8px 24px oklch(0 0 0 / 0.3);
+}
+
+.card-icon-container {
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.card-premium:hover .card-icon-container {
+  border-color: var(--color-accent-400);
+  box-shadow: 0 0 16px oklch(0.55 0.22 255 / 0.2);
+}
+
+.hover-lift {
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.hover-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-overlay);
+}
+
+/* Colorful card variant — each card gets a unique accent glow */
+.card-colorful {
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.card-colorful:hover {
+  transform: translateY(-3px);
+}
+
+/* ── Keyframes ─────────────────────────────────────────── */
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scale-in {
+  from { opacity: 0; transform: scale(0.96); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes slide-in-right {
+  from { opacity: 0; transform: translateX(16px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 8px 0 oklch(0.55 0.2 255 / 0.12); }
+  50% { box-shadow: 0 0 24px 0 oklch(0.55 0.2 255 / 0.3); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+/* ── Base Layer ────────────────────────────────────────── */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    font-family: var(--font-family-sans);
+    background-color: var(--color-surface-root);
+    color: var(--color-text-primary);
+    line-height: 1.65;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    letter-spacing: -0.01em;
+  }
+
+  /* Links — theme-aware, never fade */
+  a {
+    color: var(--color-link-default);
+    transition: color 0.2s ease;
+  }
+  a:hover { color: var(--color-link-hover); }
+  a:active { color: var(--color-link-active); }
+
+  /* ── Selection ──────────────────────── */
+  ::selection {
+    background-color: var(--color-accent-500);
+    color: #FFFFFF;
+  }
+
+  /* ── Scrollbar (WebKit) ─────────────── */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-border-default);
+    border-radius: 9999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-text-tertiary);
+  }
+
+  /* ── Focus Visible ──────────────────── */
+  *:focus-visible {
+    outline: 2px solid var(--color-accent-500);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  /* ── Reduced Motion ─────────────────── */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  /* ── Lenis ──────────────────────────── */
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+  .lenis.lenis-smooth [data-lenis-prevent] {
+    overscroll-behavior: contain;
+  }
+  .lenis.lenis-stopped {
+    overflow: clip;
+  }
+  .lenis.lenis-smooth iframe {
+    pointer-events: none;
+  }
+}
+
+/* ── Hover Fixes — Never Reduce Readability ─────────────── */
+/* Card hover: increase contrast using theme tokens */
+.card-premium:hover h3,
+.card-premium:hover .group-hover\:text-white,
+.group:hover .group-hover\:text-white {
+  color: var(--color-text-primary);
+}
+
+/* Ghost button: dark text preserved, light blue bg on hover */
+button.ghost:hover,
+.ghost:hover {
+  background-color: color-mix(in oklch, var(--color-accent-500) 6%, transparent);
+  color: var(--color-text-primary);
+}
+
+/* Glass cards: preserve text on hover */
+.glass:hover p,
+.glass:hover span {
+  color: var(--color-text-primary);
+}
+
+/* Form inputs: readable placeholders */
+::placeholder {
+  color: var(--color-text-caption);
+  opacity: 1;
+}
+
+/* ── Utility Extensions ────────────────────────────────── */
+@utility text-balance {
+  text-wrap: balance;
+}
+
+@utility text-pretty {
+  text-wrap: pretty;
+}
+
+@utility glass {
+  background-color: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+}
+
+@utility glass-raised {
+  background-color: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-raised);
+}
+
+@utility glass-glow {
+  background-color: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-glow-accent);
+}
+
+/* Premium card with gradient border glow */
+@utility card-premium {
+  background: linear-gradient(145deg, var(--color-surface-raised), var(--color-surface-muted));
+  border: 1px solid var(--color-border-muted);
+  border-radius: var(--radius-2xl);
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Gradient text — Apple-style blue-to-cyan */
+@utility text-gradient {
+  background: linear-gradient(135deg, var(--color-accent-400) 0%, var(--color-accent-500) 40%, var(--color-cyan-400) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Gradient text — blue-purple for variety */
+@utility text-gradient-blue {
+  background: linear-gradient(135deg, #3B82F6 0%, #6366F1 50%, #8B5CF6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Gradient text — warm gold */
+@utility text-gradient-gold {
+  background: linear-gradient(135deg, #F59E0B 0%, #F97316 50%, #EF4444 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Gradient text — emerald green */
+@utility text-gradient-green {
+  background: linear-gradient(135deg, #10B981 0%, #34D399 50%, #6EE7B7 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Card accent border top — blue */
+@utility card-accent-blue {
+  border-top: 3px solid #3B82F6;
+}
+/* Card accent border top — cyan */
+@utility card-accent-cyan {
+  border-top: 3px solid #06B6D4;
+}
+/* Card accent border top — green */
+@utility card-accent-green {
+  border-top: 3px solid #10B981;
+}
+/* Card accent border top — amber */
+@utility card-accent-amber {
+  border-top: 3px solid #F59E0B;
+}
+/* Card accent border top — purple */
+@utility card-accent-purple {
+  border-top: 3px solid #8B5CF6;
+}
+/* Card accent border top — rose */
+@utility card-accent-rose {
+  border-top: 3px solid #F43F5E;
+}
+
+/* Gradient backgrounds for sections */
+@utility bg-gradient-premium {
+  background: linear-gradient(180deg, var(--color-surface-root) 0%, color-mix(in oklch, var(--color-accent-500), var(--color-surface-root) 95%) 50%, var(--color-surface-root) 100%);
+}
+
+@utility bg-gradient-warm {
+  background: linear-gradient(135deg, oklch(0.97 0.02 40 / 0.5), oklch(0.95 0.03 20 / 0.3), oklch(1 0 0 / 0.5));
+}
+
+/* Gradient text — warm gold variant for special use */
+@utility text-gradient-gold {
+  background: linear-gradient(135deg, var(--color-warning-400), var(--color-warning-500), var(--color-warning-300));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}

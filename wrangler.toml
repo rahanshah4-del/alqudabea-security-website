@@ -1,0 +1,24 @@
+# Cloudflare Pages + Wrangler Configuration
+# Docs: https://developers.cloudflare.com/pages/platform/functions/wrangler-configuration/
+
+name = "security-website"
+
+# ── Pages ────────────────────────────────────────────
+pages_build_output_dir = "dist"
+
+# ── Compatibility ────────────────────────────────────
+compatibility_date = "2026-07-28"
+compatibility_flags = ["nodejs_compat"]
+
+# ── Environment Variables (non-secret) ───────────────
+# Secrets must be set via `wrangler pages secret put <KEY>` or the CF dashboard.
+# Non-secret vars below are bundled at build time by Vite via import.meta.env.
+[vars]
+NODE_ENV = "production"
+
+# ── Environments ─────────────────────────────────────
+[env.production]
+vars = { NODE_ENV = "production" }
+
+[env.preview]
+vars = { NODE_ENV = "preview" }

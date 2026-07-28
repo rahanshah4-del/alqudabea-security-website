@@ -1,0 +1,51 @@
+{
+  "name": "security-website",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Production security website built with React 19, Vite 6, and Tailwind CSS v4",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint . --ext .js,.jsx --report-unused-disable-directives --max-warnings 0",
+    "lint:fix": "eslint . --ext .js,.jsx --report-unused-disable-directives --max-warnings 0 --fix",
+    "format": "prettier . --check",
+    "format:fix": "prettier . --write",
+    "deploy": "wrangler pages deploy dist --project-name=security-website",
+    "deploy:preview": "wrangler pages deploy dist --project-name=security-website --branch=preview"
+  },
+  "dependencies": {
+    "@fontsource/inter": "^5.2.5",
+    "@fontsource/jetbrains-mono": "^5.2.5",
+    "@vuer-ai/react-helmet-async": "^2.0.7",
+    "clsx": "^2.1.1",
+    "firebase": "^11.6.0",
+    "framer-motion": "^12.7.0",
+    "gsap": "^3.13.0",
+    "lenis": "^1.3.25",
+    "lucide-react": "^0.487.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-hook-form": "^7.55.0",
+    "react-router": "^7.5.0",
+    "tailwind-merge": "^3.2.0",
+    "zod": "^3.24.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.25.0",
+    "@tailwindcss/vite": "^4.1.0",
+    "@vitejs/plugin-react": "^4.4.0",
+    "eslint": "^9.25.0",
+    "eslint-plugin-jsx-a11y": "^6.10.0",
+    "eslint-plugin-react": "^7.37.0",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-refresh": "^0.4.20",
+    "globals": "^16.1.0",
+    "prettier": "^3.5.0",
+    "prettier-plugin-tailwindcss": "^0.6.11",
+    "tailwindcss": "^4.1.0",
+    "vite": "^6.3.0",
+    "wrangler": "^4.12.0"
+  }
+}

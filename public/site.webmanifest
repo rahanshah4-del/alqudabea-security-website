@@ -1,0 +1,33 @@
+{
+  "name": "ALQUDABEA SECURITY SERVICES W.L.L.",
+  "short_name": "Alqudabea",
+  "description": "Bahrain's premier corporate security provider. Manned guarding, CCTV, access control, cybersecurity, and risk assessment.",
+  "start_url": "/",
+  "display": "browser",
+  "theme_color": "#0b0b14",
+  "background_color": "#0b0b14",
+  "lang": "en-BH",
+  "dir": "ltr",
+  "orientation": "any",
+  "categories": ["business", "security"],
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

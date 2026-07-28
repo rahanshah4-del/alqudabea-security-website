@@ -1,0 +1,51 @@
+# ── Dependencies ──────────────────────────────────────
+node_modules/
+.pnp
+.pnp.js
+
+# ── Build ─────────────────────────────────────────────
+dist/
+build/
+.vite/
+
+# ── Cloudflare ────────────────────────────────────────
+.wrangler/
+
+# ── Environment ───────────────────────────────────────
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# ── IDE ───────────────────────────────────────────────
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# ── Logs ──────────────────────────────────────────────
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ── OS ────────────────────────────────────────────────
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# ── Lockfile (optional — uncomment to ignore) ────────
+# package-lock.json
+# yarn.lock
+# pnpm-lock.yaml
+
+# ── Misc ──────────────────────────────────────────────
+*.tgz
+.cache/
+tmp/
+temp/

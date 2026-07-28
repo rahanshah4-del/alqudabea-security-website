@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" fill="none" role="img" aria-label="ALQUDABEA Shield Icon">
+  <title>ALQUDABEA Security — Shield Icon</title>
+
+  <defs>
+    <linearGradient id="sf" x1="80" y1="14" x2="80" y2="144" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0A1628"/>
+      <stop offset="1" stop-color="#050D18"/>
+    </linearGradient>
+    <linearGradient id="ss" x1="80" y1="14" x2="80" y2="144" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#3B82F6"/>
+      <stop offset="0.5" stop-color="#2563EB"/>
+      <stop offset="1" stop-color="#1D4ED8"/>
+    </linearGradient>
+    <linearGradient id="si" x1="80" y1="26" x2="80" y2="116" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#60A5FA" stop-opacity="0.15"/>
+      <stop offset="1" stop-color="#3B82F6" stop-opacity="0.04"/>
+    </linearGradient>
+    <linearGradient id="sc" x1="58" y1="74" x2="102" y2="74" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#93C5FD"/>
+      <stop offset="1" stop-color="#3B82F6"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Shield outer -->
+  <path d="M80 14L16 24v34c0 34 28.8 62 64 72 35.2-10 64-38 64-72V24L80 14z"
+    fill="url(#sf)" stroke="url(#ss)" stroke-width="2.5" stroke-linejoin="round"/>
+
+  <!-- Inner highlight -->
+  <path d="M80 24L28 32v26c0 28 22 50 52 56 30-6 52-28 52-56V32L80 24z"
+    fill="none" stroke="url(#si)" stroke-width="1.25" stroke-linejoin="round"/>
+
+  <!-- Checkmark -->
+  <path d="M62 74l12 14 24-34" stroke="url(#sc)" stroke-width="4.25"
+    stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Crown dot -->
+  <circle cx="80" cy="14" r="4.5" fill="#60A5FA" fill-opacity="0.9"/>
+</svg>
