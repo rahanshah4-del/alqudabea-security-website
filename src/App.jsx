@@ -24,6 +24,7 @@ const BlogPage = lazy(() => import('@/pages/BlogPage'));
 const BlogDetailsPage = lazy(() => import('@/pages/BlogDetailsPage'));
 const SearchPage = lazy(() => import('@/pages/SearchPage'));
 const QuotePage = lazy(() => import('@/pages/QuotePage'));
+const LoginPage = lazy(() => import('@/pages/LoginPage'));
 const NotFoundPage = lazy(() => import('@/pages/NotFoundPage'));
 
 // ── Prefetchable page modules ────────────────────────────
@@ -95,6 +96,7 @@ export default function App() {
         <Route path="blog/:slug" element={<PageSuspense><BlogDetailsPage /></PageSuspense>} />
         <Route path="search" element={<PageSuspense><SearchPage /></PageSuspense>} />
         <Route path="quote" element={<PageSuspense><QuotePage /></PageSuspense>} />
+        <Route path="login" element={<PageSuspense><LoginPage /></PageSuspense>} />
         <Route path="offline" element={<PageSuspense><LazyOfflinePage /></PageSuspense>} />
         <Route path="*" element={<PageSuspense><NotFoundPage /></PageSuspense>} />
         <Route path="solutions" element={<PagePlaceholder title="Solutions" description="Tailored security solutions for your organization." />} />
