@@ -56,7 +56,7 @@ const TRUST_ITEMS = [
   {
     icon: Star,
     title: 'Technology-Driven',
-    description: 'Real-time GPS tracking, AI-integrated CCTV, incident reporting software, and smart patrol systems.',
+    description: 'Real-time GPS tracking, Nexora AI-integrated CCTV, incident reporting software, and smart patrol systems.',
     accent: 'card-accent-amber',
     iconBg: 'bg-yellow-500/10 border-yellow-500/20',
     iconColor: 'text-yellow-400',

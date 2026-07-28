@@ -1,13 +1,13 @@
 /**
- * AI Provider Abstraction — ALQUDABEA Security Services W.L.L.
+ * Nexora AI Provider Abstraction — ALQUDABEA Security Services W.L.L.
  *
- * Architecture-only file. No live AI calls are made.
+ * Architecture-only file. No live Nexora AI calls are made.
  * This prepares the foundation for future Nexora AI chatbot integration.
  *
  * The abstraction layer allows swapping providers (OpenAI, Anthropic, custom)
  * without changing any consuming code. All chat functionality is stream-ready.
  *
- * STATUS: Placeholder — do NOT connect to any AI API yet.
+ * STATUS: Placeholder — do NOT connect to any Nexora AI API yet.
  */
 
 // ── Provider Interface ────────────────────────────────────
@@ -64,7 +64,7 @@ export function getProvider(name) {
 export async function chat(messages, options = {}) {
   const provider = getProvider();
   if (!provider) {
-    throw new Error('No AI provider configured. Set VITE_AI_PROVIDER in .env when ready.');
+    throw new Error('No Nexora AI provider configured. Set VITE_AI_PROVIDER in .env when ready.');
   }
   return provider.chat(messages, options);
 }
@@ -79,7 +79,7 @@ export async function chat(messages, options = {}) {
 export async function* chatStream(messages, options = {}) {
   const provider = getProvider();
   if (!provider) {
-    yield { content: 'AI is not configured yet. This is a placeholder.', done: true };
+    yield { content: 'Nexora AI is not configured yet. This is a placeholder.', done: true };
     return;
   }
   if (!provider.chatStream) {

@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router';
+import { Link, useNavigate, Navigate } from 'react-router';
 import { motion } from 'framer-motion';
-import { Eye, EyeOff, Lock, Mail, ArrowRight, Shield, AlertCircle } from 'lucide-react';
+import { Eye, EyeOff, Lock, Mail, ArrowRight, AlertCircle } from 'lucide-react';
+import { useAdminAuth } from '@/admin/AdminAuth';
 import { SEO } from '@/components/SEO';
 import { Container } from '@/components/Container';
 import { Button } from '@/components/Button';
@@ -10,34 +11,18 @@ import { APPLE_EASE } from '@/hooks/useScrollReveal';
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [email, setEmail] = useState('admin@nexora.com');
+  const [password, setPassword] = useState('12345');
+  const { user, loading, error, login } = useAdminAuth();
   const navigate = useNavigate();
+
+  if (user) { return <Navigate to="/admin/dashboard" replace />; }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
-
-    if (!email.trim() || !password.trim()) {
-      setError('Please enter your email and password.');
-      return;
-    }
-
-    setLoading(true);
-
-    // Simulate auth — Firebase-ready placeholder
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-      // Future: Replace with Firebase signInWithEmailAndPassword
-      // await signInWithEmailAndPassword(auth, email, password);
-      navigate('/');
-    } catch {
-      setError('Invalid credentials. Please try again.');
-    } finally {
-      setLoading(false);
-    }
+    if (!email.trim() || !password.trim()) { return; }
+    const success = await login(email, password);
+    if (success) { navigate('/admin/dashboard'); }
   };
 
   const inputCls = 'w-full rounded-xl border border-theme bg-surface-root/60 px-4 py-3.5 pl-11 text-sm text-theme-primary placeholder:text-theme-muted focus:border-accent-500 focus:ring-accent-500/20 focus:ring-2 focus:outline-none transition-all duration-200';
@@ -61,9 +46,7 @@ export default function LoginPage() {
           >
             {/* Logo + Title */}
             <div className="flex flex-col items-center text-center">
-              <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-accent-500/20 bg-accent-500/10 shadow-glow-accent">
-                <Shield className="h-7 w-7 text-accent-400" />
-              </div>
+              <img src="/logo-main.png" alt="Alqudabea Security Services" className="h-16 w-auto object-contain" />
               <h1 className="mt-5 font-sans text-2xl font-bold tracking-[-0.02em] text-theme-primary">
                 Admin Login
               </h1>
@@ -134,10 +117,15 @@ export default function LoginPage() {
             </p>
           </motion.div>
 
-          {/* Footer text */}
-          <p className="mt-8 text-center font-mono text-[11px] text-theme-muted">
-            Alqudabea Security Services W.L.L. &copy; {new Date().getFullYear()}
-          </p>
+          {/* Footer */}
+          <div className="mt-8 space-y-1 text-center">
+            <p className="font-mono text-[11px] text-theme-muted">
+              Alqudabea Security Services W.L.L. &copy; {new Date().getFullYear()}
+            </p>
+            <p className="font-mono text-[10px] text-theme-muted/60">
+              Designed &amp; Developed by <span className="font-medium text-theme-muted">Nexora Solution</span>
+            </p>
+          </div>
         </Container>
       </main>
     </>

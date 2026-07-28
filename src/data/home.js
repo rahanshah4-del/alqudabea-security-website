@@ -81,7 +81,7 @@ export const SERVICES = {
       icon: Camera,
       title: 'CCTV & Surveillance',
       description:
-        'Advanced monitoring systems with AI-powered detection, remote access, and 24/7 surveillance operations.',
+        'Advanced monitoring systems with Nexora AI-powered detection, remote access, and 24/7 surveillance operations.',
       href: '/services',
     },
     {

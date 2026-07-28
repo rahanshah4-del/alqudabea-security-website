@@ -3,6 +3,8 @@ import { Routes, Route, useLocation } from 'react-router';
 import { useLenis } from '@/hooks/useLenis';
 import { RootLayout } from '@/layouts/RootLayout';
 import { HomePage } from '@/pages/HomePage';
+import { AdminAuthProvider } from '@/admin/AdminAuth';
+import { AdminLayout } from '@/admin/AdminLayout';
 import { trackPageView } from '@/services/analytics';
 
 /**
@@ -25,6 +27,24 @@ const BlogDetailsPage = lazy(() => import('@/pages/BlogDetailsPage'));
 const SearchPage = lazy(() => import('@/pages/SearchPage'));
 const QuotePage = lazy(() => import('@/pages/QuotePage'));
 const LoginPage = lazy(() => import('@/pages/LoginPage'));
+const DashboardPage = lazy(() => import('@/admin/DashboardPage'));
+const CommandPage = lazy(() => import('@/admin/CommandPage'));
+const GuardsPage = lazy(() => import('@/admin/GuardsPage'));
+const ShiftsPage = lazy(() => import('@/admin/ShiftsPage'));
+const AttendancePage = lazy(() => import('@/admin/AttendancePage'));
+const ClientsPage = lazy(() => import('@/admin/ClientsPage'));
+const SitesPage = lazy(() => import('@/admin/SitesPage'));
+const PatrolPage = lazy(() => import('@/admin/PatrolPage'));
+const IncidentsPage = lazy(() => import('@/admin/IncidentsPage'));
+const VisitorsPage = lazy(() => import('@/admin/VisitorsPage'));
+const VehiclesPage = lazy(() => import('@/admin/VehiclesPage'));
+const HRPage = lazy(() => import('@/admin/HRPage'));
+const FinancePage = lazy(() => import('@/admin/FinancePage'));
+const MarketingPage = lazy(() => import('@/admin/MarketingPage'));
+const ReportsPage = lazy(() => import('@/admin/ReportsPage'));
+const SettingsPage = lazy(() => import('@/admin/SettingsPage'));
+const AIPage = lazy(() => import('@/admin/AIPage'));
+const NotificationsPage = lazy(() => import('@/admin/NotificationsPage'));
 const NotFoundPage = lazy(() => import('@/pages/NotFoundPage'));
 
 // ── Prefetchable page modules ────────────────────────────
@@ -96,12 +116,35 @@ export default function App() {
         <Route path="blog/:slug" element={<PageSuspense><BlogDetailsPage /></PageSuspense>} />
         <Route path="search" element={<PageSuspense><SearchPage /></PageSuspense>} />
         <Route path="quote" element={<PageSuspense><QuotePage /></PageSuspense>} />
-        <Route path="login" element={<PageSuspense><LoginPage /></PageSuspense>} />
         <Route path="offline" element={<PageSuspense><LazyOfflinePage /></PageSuspense>} />
         <Route path="*" element={<PageSuspense><NotFoundPage /></PageSuspense>} />
         <Route path="solutions" element={<PagePlaceholder title="Solutions" description="Tailored security solutions for your organization." />} />
         <Route path="privacy" element={<PagePlaceholder title="Privacy Policy" description="How we handle and protect your data." />} />
         <Route path="terms" element={<PagePlaceholder title="Terms of Service" description="Terms and conditions for using our platform." />} />
+      </Route>
+      {/* Standalone routes — no Navbar/Footer */}
+      <Route path="login" element={<AdminAuthProvider><PageSuspense><LoginPage /></PageSuspense></AdminAuthProvider>} />
+      {/* Admin routes — protected dashboard */}
+      <Route path="admin" element={<AdminAuthProvider><AdminLayout /></AdminAuthProvider>}>
+        <Route index element={<PageSuspense><DashboardPage /></PageSuspense>} />
+        <Route path="dashboard" element={<PageSuspense><DashboardPage /></PageSuspense>} />
+        <Route path="command" element={<PageSuspense><CommandPage /></PageSuspense>} />
+        <Route path="guards" element={<PageSuspense><GuardsPage /></PageSuspense>} />
+        <Route path="shifts" element={<PageSuspense><ShiftsPage /></PageSuspense>} />
+        <Route path="attendance" element={<PageSuspense><AttendancePage /></PageSuspense>} />
+        <Route path="clients" element={<PageSuspense><ClientsPage /></PageSuspense>} />
+        <Route path="sites" element={<PageSuspense><SitesPage /></PageSuspense>} />
+        <Route path="patrol" element={<PageSuspense><PatrolPage /></PageSuspense>} />
+        <Route path="incidents" element={<PageSuspense><IncidentsPage /></PageSuspense>} />
+        <Route path="visitors" element={<PageSuspense><VisitorsPage /></PageSuspense>} />
+        <Route path="vehicles" element={<PageSuspense><VehiclesPage /></PageSuspense>} />
+        <Route path="hr" element={<PageSuspense><HRPage /></PageSuspense>} />
+        <Route path="finance" element={<PageSuspense><FinancePage /></PageSuspense>} />
+        <Route path="marketing" element={<PageSuspense><MarketingPage /></PageSuspense>} />
+        <Route path="reports" element={<PageSuspense><ReportsPage /></PageSuspense>} />
+        <Route path="settings" element={<PageSuspense><SettingsPage /></PageSuspense>} />
+        <Route path="ai" element={<PageSuspense><AIPage /></PageSuspense>} />
+        <Route path="notifications" element={<PageSuspense><NotificationsPage /></PageSuspense>} />
       </Route>
     </Routes>
   );

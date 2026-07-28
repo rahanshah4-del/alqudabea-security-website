@@ -130,10 +130,10 @@ export const JOBS = [
     type: 'Full-time',
     experience: 'Entry Level',
     postedDate: '2026-07-15',
-    description: 'Operate our state-of-the-art monitoring centre. Monitor multiple client sites using AI-assisted surveillance technology.',
+    description: 'Operate our state-of-the-art monitoring centre. Monitor multiple client sites using Nexora AI-assisted surveillance technology.',
     responsibilities: [
       'Monitor CCTV feeds across multiple client sites',
-      'Identify and report suspicious activity using AI-assisted analytics',
+      'Identify and report suspicious activity using Nexora AI-assisted analytics',
       'Maintain detailed monitoring logs',
       'Coordinate with mobile patrol units for incident response',
       'Perform system health checks and report technical issues',

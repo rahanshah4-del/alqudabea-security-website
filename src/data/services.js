@@ -90,9 +90,9 @@ export const SERVICES = [
     title: 'CCTV Monitoring',
     subtitle: 'Eyes on your property — 24/7/365',
     description:
-      'Our state-of-the-art monitoring center operates around the clock, leveraging AI-powered video analytics, motion detection, and remote camera access. Whether you need live monitoring, forensic review, or system health checks, our team ensures your surveillance infrastructure delivers maximum security value — not just recordings.',
+      'Our state-of-the-art monitoring center operates around the clock, leveraging Nexora AI-powered video analytics, motion detection, and remote camera access. Whether you need live monitoring, forensic review, or system health checks, our team ensures your surveillance infrastructure delivers maximum security value — not just recordings.',
     benefits: [
-      'AI-powered motion and anomaly detection',
+      'Nexora AI-powered motion and anomaly detection',
       '24/7 manned monitoring center in Bahrain',
       'Remote access via secure mobile app',
       'Automatic system health monitoring and alerts',

@@ -16,6 +16,9 @@ export function useLenis() {
   const lenisRef = useRef(null);
 
   useEffect(() => {
+    // Skip Lenis on admin pages — they have their own scroll container
+    if (window.location.pathname.startsWith('/admin')) { return; }
+
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
 

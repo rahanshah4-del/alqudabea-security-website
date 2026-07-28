@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 import { Link } from 'react-router';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, X, ChevronRight, Phone, MessageCircle } from 'lucide-react';
+import { Search, X, ChevronRight, Phone, MessageCircle, LogIn } from 'lucide-react';
 import { cn } from '@/utils/cn';
 import { Container } from '@/components/Container';
 import { Button } from '@/components/Button';
@@ -61,6 +61,9 @@ export function Navbar() {
 
             {/* ── Desktop Actions ─────────────────────── */}
             <div className="hidden items-center gap-2 md:flex">
+              <Link to="/login" className="flex h-9 w-9 items-center justify-center rounded-xl border border-theme-muted text-theme-muted transition-all duration-200 hover:border-accent-500/30 hover:text-accent-400" aria-label="Admin Login">
+                <LogIn className="h-4 w-4" />
+              </Link>
               <ThemeToggle />
               <Button as={Link} to={NAVIGATION.cta.href} size="sm">{NAVIGATION.cta.label}</Button>
             </div>
