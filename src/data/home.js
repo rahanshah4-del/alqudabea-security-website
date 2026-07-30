@@ -214,7 +214,7 @@ export const CTA = {
   },
   contact: {
     phone: '+973 7790 7878',
-    email: 'info@alqudabeass.com',
+    email: 'info@alqudabeasecurity.online',
   },
 };
 

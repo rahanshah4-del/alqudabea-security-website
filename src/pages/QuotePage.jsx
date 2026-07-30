@@ -183,7 +183,7 @@ export default function QuotePage() {
 
                   {/* Email */}
                   <a
-                    href={`mailto:info@alqudabeass.com?subject=Security Quote Request - ${form.name}&body=${buildEmailBody()}`}
+                    href={`mailto:security@alqudabeasecurity.online?subject=Security Quote Request - ${form.name}&body=${buildEmailBody()}`}
                     className="group flex flex-col items-center gap-3 rounded-2xl border border-blue-500/30 p-6 transition-all duration-300 hover:border-blue-500/60 hover:shadow-lg"
                     style={{ background: 'linear-gradient(160deg, rgba(59,130,246,0.12), rgba(59,130,246,0.04))' }}
                   >

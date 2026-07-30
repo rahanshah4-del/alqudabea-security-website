@@ -22,7 +22,10 @@ export const SITE = {
   },
   contact: {
     phone: ['+973 7790 7878', '+973 3445 2144', '+973 3456 9393'],
-    email: 'info@alqudabeass.com',
+    email: 'info@alqudabeasecurity.online',
+    emailSecurity: 'security@alqudabeasecurity.online',
+    emailHelp: 'help@alqudabeasecurity.online',
+    emailAI: 'ai@alqudabeasecurity.online',
     address: 'Office 22, Building 2552, Road 1275, Block 912, Riffa/Al Gharbi, Bahrain',
   },
 };
