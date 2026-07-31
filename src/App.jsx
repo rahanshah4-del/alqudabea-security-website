@@ -44,6 +44,7 @@ const ReportsPage = lazy(() => import('@/admin/ReportsPage'));
 const SettingsPage = lazy(() => import('@/admin/SettingsPage'));
 const AIPage = lazy(() => import('@/admin/AIPage'));
 const NotificationsPage = lazy(() => import('@/admin/NotificationsPage'));
+const UsersPage = lazy(() => import('@/admin/UsersPage'));
 const NotFoundPage = lazy(() => import('@/pages/NotFoundPage'));
 
 // ── Prefetchable page modules ────────────────────────────
@@ -144,6 +145,7 @@ export default function App() {
         <Route path="settings" element={<PageSuspense><SettingsPage /></PageSuspense>} />
         <Route path="ai" element={<PageSuspense><AIPage /></PageSuspense>} />
         <Route path="notifications" element={<PageSuspense><NotificationsPage /></PageSuspense>} />
+        <Route path="users" element={<PageSuspense><UsersPage /></PageSuspense>} />
       </Route>
     </Routes>
   );

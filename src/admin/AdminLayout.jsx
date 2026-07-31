@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Outlet, Link, useLocation, Navigate } from 'react-router';
 import { motion } from 'framer-motion';
-import { LayoutDashboard, Shield, Users, CalendarCheck, Clock, Building2, MapPin, Radio, AlertTriangle, UserCheck, Car, GraduationCap, DollarSign, TrendingUp, FileText, Settings, Sparkles, BellRing, Search, Menu, LogOut, Bell, PanelLeftClose, PanelLeft } from 'lucide-react';
+import { LayoutDashboard, Shield, Users, CalendarCheck, Clock, Building2, MapPin, Radio, AlertTriangle, UserCheck, Car, GraduationCap, DollarSign, TrendingUp, FileText, Settings, Sparkles, BellRing, Key, Search, Menu, LogOut, Bell, PanelLeftClose, PanelLeft } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { cn } from '@/utils/cn';
 
@@ -24,6 +24,7 @@ const NAV_ITEMS = [
   { icon: Settings, label: 'Settings', path: '/admin/settings' },
   { icon: Sparkles, label: 'Nexora AI', path: '/admin/ai' },
   { icon: BellRing, label: 'Notifications', path: '/admin/notifications' },
+  { icon: Key, label: 'Users', path: '/admin/users' },
 ];
 
 export function AdminLayout() {
