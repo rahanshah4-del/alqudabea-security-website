@@ -19,20 +19,27 @@ const firebaseConfig = {
   measurementId: import.meta.env.VITE_GA4_MEASUREMENT_ID,
 };
 
-if (!firebaseConfig.apiKey) {
-  throw new Error('Firebase config missing. Copy .env.example to .env and fill in your Firebase keys.');
-}
-
-const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
-
-export const auth = getAuth(app);
-export const db = getFirestore(app);
-export const storage = getStorage(app);
-
+let app = null;
+let auth = null;
+let db = null;
+let storage = null;
 let analytics = null;
-if (typeof window !== 'undefined') {
-  isSupported().then((yes) => { if (yes) { analytics = getAnalytics(app); } });
-}
-export { analytics };
 
+try {
+  if (firebaseConfig.apiKey) {
+    app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
+    auth = getAuth(app);
+    db = getFirestore(app);
+    storage = getStorage(app);
+    if (typeof window !== 'undefined') {
+      isSupported().then((yes) => { if (yes) { analytics = getAnalytics(app); } });
+    }
+  } else {
+    console.warn('[Firebase] Config missing — running without backend. Copy .env.example to .env for full features.');
+  }
+} catch (e) {
+  console.error('[Firebase] Init failed:', e.message);
+}
+
+export { auth, db, storage, analytics };
 export default app;

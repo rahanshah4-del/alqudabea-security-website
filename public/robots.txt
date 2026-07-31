@@ -1,17 +1,21 @@
-# https://alqudabeasecurity.online/robots.txt
-# ALQUDABEA SECURITY SERVICES W.L.L.
+# ── ALQUDABEA SECURITY SERVICES W.L.L. — robots.txt ─────
+# Production domain: https://alqudabeasecurity.online
+# Validated for: Google, Bing, Cloudflare Pages, Baidu, Yandex
+# Generated: 2026-07-31
 
+# ── Global Rules ──────────────────────────────────────
 User-agent: *
 Allow: /
 
-# Sitemap
+# ── Sitemap ───────────────────────────────────────────
 Sitemap: https://alqudabeasecurity.online/sitemap.xml
 
-# Crawl delay
-Crawl-delay: 10
-
-# Private paths
+# ── Private / Admin Routes ────────────────────────────
 Disallow: /admin/
-Disallow: /api/
 Disallow: /dashboard/
 Disallow: /portal/
+Disallow: /api/
+
+# ── Cloudflare Managed Content ────────────────────────
+# These paths are managed by Cloudflare and should not be indexed.
+Disallow: /cdn-cgi/

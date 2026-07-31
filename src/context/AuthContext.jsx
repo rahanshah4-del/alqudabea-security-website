@@ -14,11 +14,13 @@ export function AuthProvider({ children }) {
   const [error, setError] = useState('');
 
   useEffect(() => {
+    if (!auth) { setLoading(false); return; }
     const unsub = onAuthStateChanged(auth, (u) => { setUser(u); setLoading(false); });
     return unsub;
   }, []);
 
   const login = useCallback(async (email, password) => {
+    if (!auth) { setError('Authentication unavailable — Firebase not configured.'); return false; }
     setLoading(true); setError('');
     try {
       const cred = await signInWithEmailAndPassword(auth, email, password);

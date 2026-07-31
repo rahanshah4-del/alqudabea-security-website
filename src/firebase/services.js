@@ -6,59 +6,53 @@ import { db, storage } from '@/firebase/config';
 import { collection, doc, addDoc, setDoc, getDoc, getDocs, updateDoc, deleteDoc, query, orderBy, limit, serverTimestamp, onSnapshot } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
 
-// ── Error Handler ────────────────────────────────────────
 function handleError(op, err) {
+  if (err.message === 'Firebase not configured') { console.warn(`[Firebase] ${op} skipped — not configured`); return null; }
   console.error(`[Firebase] ${op} failed:`, err.message);
   throw err;
 }
 
+function checkDb() { if (!db) { throw new Error('Firebase not configured'); } }
+function checkStorage() { if (!storage) { throw new Error('Firebase Storage not configured'); } }
+
 // ── Generic CRUD ─────────────────────────────────────────
 export async function getCollection(path, ...constraints) {
-  try {
-    const q = constraints.length > 0 ? query(collection(db, path), ...constraints) : collection(db, path);
-    const snap = await getDocs(q);
-    return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
-  } catch (e) { handleError(`getCollection(${path})`, e); return []; }
+  try { checkDb(); const q = constraints.length > 0 ? query(collection(db, path), ...constraints) : collection(db, path); const snap = await getDocs(q); return snap.docs.map((d) => ({ id: d.id, ...d.data() })); }
+  catch (e) { return handleError(`getCollection(${path})`, e) || []; }
 }
-
 export async function getDocument(path, id) {
-  try { const snap = await getDoc(doc(db, path, id)); return snap.exists() ? { id: snap.id, ...snap.data() } : null; }
-  catch (e) { handleError(`getDocument(${path}/${id})`, e); return null; }
+  try { checkDb(); const snap = await getDoc(doc(db, path, id)); return snap.exists() ? { id: snap.id, ...snap.data() } : null; }
+  catch (e) { return handleError(`getDocument(${path}/${id})`, e) || null; }
 }
-
 export async function addDocument(path, data) {
-  try { const ref = await addDoc(collection(db, path), { ...data, createdAt: serverTimestamp(), updatedAt: serverTimestamp() }); return ref.id; }
-  catch (e) { handleError(`addDocument(${path})`, e); return null; }
+  try { checkDb(); const r = await addDoc(collection(db, path), { ...data, createdAt: serverTimestamp(), updatedAt: serverTimestamp() }); return r.id; }
+  catch (e) { return handleError(`addDocument(${path})`, e) || null; }
 }
-
 export async function setDocument(path, id, data) {
-  try { await setDoc(doc(db, path, id), { ...data, updatedAt: serverTimestamp() }, { merge: true }); }
+  try { checkDb(); await setDoc(doc(db, path, id), { ...data, updatedAt: serverTimestamp() }, { merge: true }); }
   catch (e) { handleError(`setDocument(${path}/${id})`, e); }
 }
-
 export async function updateDocument(path, id, data) {
-  try { await updateDoc(doc(db, path, id), { ...data, updatedAt: serverTimestamp() }); }
+  try { checkDb(); await updateDoc(doc(db, path, id), { ...data, updatedAt: serverTimestamp() }); }
   catch (e) { handleError(`updateDocument(${path}/${id})`, e); }
 }
-
 export async function deleteDocument(path, id) {
-  try { await deleteDoc(doc(db, path, id)); }
+  try { checkDb(); await deleteDoc(doc(db, path, id)); }
   catch (e) { handleError(`deleteDocument(${path}/${id})`, e); }
 }
-
 export function listenCollection(path, callback, ...constraints) {
+  if (!db) { console.warn('[Firebase] listenCollection skipped — not configured'); return () => {}; }
   const q = constraints.length > 0 ? query(collection(db, path), ...constraints) : collection(db, path);
-  return onSnapshot(q, (snap) => { callback(snap.docs.map((d) => ({ id: d.id, ...d.data() }))); }, (e) => handleError(`listenCollection(${path})`, e));
+  return onSnapshot(q, (snap) => { callback(snap.docs.map((d) => ({ id: d.id, ...d.data() }))); }, (e) => { handleError(`listenCollection(${path})`, e); });
 }
 
 // ── Storage ──────────────────────────────────────────────
 export async function uploadFile(path, file) {
-  try { const storageRef = ref(storage, path); const snap = await uploadBytes(storageRef, file); return getDownloadURL(snap.ref); }
-  catch (e) { handleError(`uploadFile(${path})`, e); return null; }
+  try { checkStorage(); const storageRef = ref(storage, path); const snap = await uploadBytes(storageRef, file); return getDownloadURL(snap.ref); }
+  catch (e) { return handleError(`uploadFile(${path})`, e) || null; }
 }
-
 export async function deleteFile(path) {
-  try { await deleteObject(ref(storage, path)); }
+  try { checkStorage(); await deleteObject(ref(storage, path)); }
   catch (e) { handleError(`deleteFile(${path})`, e); }
 }
 
