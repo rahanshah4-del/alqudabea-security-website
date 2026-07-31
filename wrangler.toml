@@ -1,4 +1,2 @@
-# Cloudflare Pages — Static Site
-# Deploy via: npx wrangler pages deploy dist
-# Or connect Git repo in Cloudflare Dashboard
-name = "alqudabea-security-website"
+# Cloudflare Pages — Vite SPA
+# Deploy: npx wrangler pages deploy dist
