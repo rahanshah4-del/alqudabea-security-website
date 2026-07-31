@@ -1,20 +1,5 @@
 # Cloudflare Pages — Static Site Deployment
-# This is a Vite static website. No Worker code required.
-# Deploy via Cloudflare Pages dashboard or `wrangler pages deploy dist`
-
+# Vite React SPA — no Worker code required
 name = "alqudabea-security-website"
 compatibility_date = "2026-07-28"
-
-# Static asset directory (Vite output)
-[assets]
-directory = "./dist"
-
-# Environment variables (non-secret, bundled by Vite at build time)
-[vars]
-NODE_ENV = "production"
-
-[env.production]
-vars = { NODE_ENV = "production" }
-
-[env.preview]
-vars = { NODE_ENV = "preview" }
+pages_build_output_dir = "./dist"
