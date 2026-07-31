@@ -1,3 +1,1 @@
-# ALQUDABEA SECURITY SERVICES W.L.L. — Cloudflare Pages SPA Redirects
-# All client-side routes fall back to index.html for React Router
-/*    /index.html   200
+/* /index.html 200
