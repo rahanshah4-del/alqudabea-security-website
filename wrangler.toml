@@ -1,7 +1,4 @@
-# Cloudflare Pages — Static Site Deployment
-# Vite React SPA — no Worker code
+# Cloudflare Pages — Static Site
+# Deploy via: npx wrangler pages deploy dist
+# Or connect Git repo in Cloudflare Dashboard
 name = "alqudabea-security-website"
-compatibility_date = "2026-07-28"
-
-[assets]
-directory = "./dist"
