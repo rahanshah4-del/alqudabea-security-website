@@ -647,15 +647,16 @@ button.ghost:hover,
 @utility text-gradient {
   background: linear-gradient(135deg, var(--color-accent-400) 0%, var(--color-accent-500) 40%, var(--color-cyan-400) 100%);
   -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: transparent;
   background-clip: text;
+  -webkit-background-clip: text;
 }
 
 /* Gradient text — blue-purple for variety */
 @utility text-gradient-blue {
   background: linear-gradient(135deg, #3B82F6 0%, #6366F1 50%, #8B5CF6 100%);
   -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: transparent;
   background-clip: text;
 }
 
@@ -663,7 +664,7 @@ button.ghost:hover,
 @utility text-gradient-gold {
   background: linear-gradient(135deg, #F59E0B 0%, #F97316 50%, #EF4444 100%);
   -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: transparent;
   background-clip: text;
 }
 
@@ -671,7 +672,7 @@ button.ghost:hover,
 @utility text-gradient-green {
   background: linear-gradient(135deg, #10B981 0%, #34D399 50%, #6EE7B7 100%);
   -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: transparent;
   background-clip: text;
 }
 
@@ -713,6 +714,6 @@ button.ghost:hover,
 @utility text-gradient-gold {
   background: linear-gradient(135deg, var(--color-warning-400), var(--color-warning-500), var(--color-warning-300));
   -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: transparent;
   background-clip: text;
 }

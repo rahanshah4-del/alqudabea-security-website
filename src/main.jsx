@@ -4,6 +4,7 @@ import { HelmetProvider } from '@vuer-ai/react-helmet-async';
 import { BrowserRouter } from 'react-router';
 import { ThemeProvider } from '@/context/ThemeContext';
 import { AuthProvider } from '@/context/AuthContext';
+import { BlogProvider } from '@/context/BlogContext';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { initAnalytics } from '@/services/analytics';
 import App from './App';
@@ -25,7 +26,9 @@ createRoot(rootElement).render(
         <BrowserRouter>
           <ThemeProvider>
             <AuthProvider>
-              <App />
+              <BlogProvider>
+                <App />
+              </BlogProvider>
             </AuthProvider>
           </ThemeProvider>
         </BrowserRouter>

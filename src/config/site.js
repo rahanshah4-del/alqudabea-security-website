@@ -38,6 +38,7 @@ export const NAVIGATION = {
     { label: 'Blog', href: '/blog' },
     { label: 'About', href: '/about' },
     { label: 'Contact', href: '/contact' },
+    { label: 'Company Profile', href: '/catalog' },
   ],
   cta: {
     label: 'Request a Quote',

@@ -7,7 +7,7 @@ import { Container } from '@/components/Container';
 import { Button } from '@/components/Button';
 import { breadcrumbSchema } from '@/config/seo';
 import { cn } from '@/utils/cn';
-import { ARTICLES } from '@/data/blog';
+import { useBlog } from '@/context/BlogContext';
 import { JOBS } from '@/data/careers';
 import { APPLE_EASE } from '@/hooks/useScrollReveal';
 
@@ -26,6 +26,7 @@ const INDUSTRIES_LIST = [
 const BREADCRUMB = breadcrumbSchema([{ name: 'Home', url: '/' }, { name: 'Search', url: '/search' }]);
 
 export default function SearchPage() {
+  const { articles: blogArticles } = useBlog();
   const [params, setParams] = useSearchParams();
   const query = params.get('q') || '';
   const [input, setInput] = useState(query);
@@ -36,7 +37,7 @@ export default function SearchPage() {
     if (!query) { return { articles: [], jobs: [], services: [], industries: [] }; }
     const q = query.toLowerCase();
     return {
-      articles: ARTICLES.filter((a) => a.title.toLowerCase().includes(q) || a.excerpt.toLowerCase().includes(q) || a.tags.some((t) => t.toLowerCase().includes(q))),
+      articles: blogArticles.filter((a) => a.title.toLowerCase().includes(q) || a.excerpt.toLowerCase().includes(q) || a.tags?.some((t) => t.toLowerCase().includes(q))),
       jobs: JOBS.filter((j) => j.title.toLowerCase().includes(q) || j.department.toLowerCase().includes(q) || j.description.toLowerCase().includes(q)),
       services: SERVICES_LIST.filter((s) => s.toLowerCase().includes(q)),
       industries: INDUSTRIES_LIST.filter((i) => i.toLowerCase().includes(q)),

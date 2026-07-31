@@ -1,3 +1,8 @@
 name = "alqudabea-security-website"
 pages_build_output_dir = "dist"
 compatibility_date = "2026-08-03"
+
+# R2 Buckets — static assets (PDFs, images, documents)
+[[r2_buckets]]
+binding = "R2_ASSETS"
+bucket_name = "alqudabea-assets"

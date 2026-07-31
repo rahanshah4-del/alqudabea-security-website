@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Outlet, Link, useLocation, Navigate } from 'react-router';
 import { motion } from 'framer-motion';
-import { LayoutDashboard, Shield, Users, CalendarCheck, Clock, Building2, MapPin, Radio, AlertTriangle, UserCheck, Car, GraduationCap, DollarSign, TrendingUp, FileText, Settings, Sparkles, BellRing, Key, Search, Menu, LogOut, Bell, PanelLeftClose, PanelLeft } from 'lucide-react';
+import { LayoutDashboard, Shield, Users, CalendarCheck, Clock, Building2, MapPin, Radio, AlertTriangle, UserCheck, Car, GraduationCap, DollarSign, TrendingUp, FileText, Settings, Sparkles, BellRing, Key, BookOpen, Search, Menu, LogOut, Bell, PanelLeftClose, PanelLeft } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { cn } from '@/utils/cn';
 
@@ -20,6 +20,7 @@ const NAV_ITEMS = [
   { icon: GraduationCap, label: 'HR', path: '/admin/hr' },
   { icon: DollarSign, label: 'Finance', path: '/admin/finance' },
   { icon: TrendingUp, label: 'Marketing', path: '/admin/marketing' },
+  { icon: BookOpen, label: 'Blog', path: '/admin/blog' },
   { icon: FileText, label: 'Reports', path: '/admin/reports' },
   { icon: Settings, label: 'Settings', path: '/admin/settings' },
   { icon: Sparkles, label: 'Nexora AI', path: '/admin/ai' },

@@ -26,6 +26,7 @@ const BlogDetailsPage = lazy(() => import('@/pages/BlogDetailsPage'));
 const SearchPage = lazy(() => import('@/pages/SearchPage'));
 const QuotePage = lazy(() => import('@/pages/QuotePage'));
 const LoginPage = lazy(() => import('@/pages/LoginPage'));
+const CatalogPage = lazy(() => import('@/pages/CatalogPage'));
 const DashboardPage = lazy(() => import('@/admin/DashboardPage'));
 const CommandPage = lazy(() => import('@/admin/CommandPage'));
 const GuardsPage = lazy(() => import('@/admin/GuardsPage'));
@@ -40,6 +41,7 @@ const VehiclesPage = lazy(() => import('@/admin/VehiclesPage'));
 const HRPage = lazy(() => import('@/admin/HRPage'));
 const FinancePage = lazy(() => import('@/admin/FinancePage'));
 const MarketingPage = lazy(() => import('@/admin/MarketingPage'));
+const BlogAdminPage = lazy(() => import('@/admin/BlogPage'));
 const ReportsPage = lazy(() => import('@/admin/ReportsPage'));
 const SettingsPage = lazy(() => import('@/admin/SettingsPage'));
 const AIPage = lazy(() => import('@/admin/AIPage'));
@@ -109,6 +111,7 @@ export default function App() {
         <Route path="about" element={<PageSuspense><AboutPage /></PageSuspense>} />
         <Route path="industries" element={<PageSuspense><IndustriesPage /></PageSuspense>} />
         <Route path="contact" element={<PageSuspense><ContactPage /></PageSuspense>} />
+        <Route path="catalog" element={<PageSuspense><CatalogPage /></PageSuspense>} />
         <Route path="careers" element={<PageSuspense><CareersPage /></PageSuspense>} />
         <Route path="careers/:jobId" element={<PageSuspense><CareerDetailsPage /></PageSuspense>} />
         <Route path="careers/:jobId/apply" element={<PageSuspense><JobApplicationPage /></PageSuspense>} />
@@ -141,6 +144,7 @@ export default function App() {
         <Route path="hr" element={<PageSuspense><HRPage /></PageSuspense>} />
         <Route path="finance" element={<PageSuspense><FinancePage /></PageSuspense>} />
         <Route path="marketing" element={<PageSuspense><MarketingPage /></PageSuspense>} />
+        <Route path="blog" element={<PageSuspense><BlogAdminPage /></PageSuspense>} />
         <Route path="reports" element={<PageSuspense><ReportsPage /></PageSuspense>} />
         <Route path="settings" element={<PageSuspense><SettingsPage /></PageSuspense>} />
         <Route path="ai" element={<PageSuspense><AIPage /></PageSuspense>} />

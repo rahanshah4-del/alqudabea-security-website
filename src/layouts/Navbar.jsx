@@ -24,8 +24,8 @@ export function Navbar() {
         className={cn(
           'fixed inset-x-0 top-0 z-50 transition-all duration-500',
           scrolled
-            ? 'glass border-b border-theme-muted'
-            : 'backdrop-blur-0 border-b border-transparent bg-transparent',
+            ? 'glass border-b border-theme-muted shadow-lg shadow-black/10'
+            : 'border-b border-white/[0.06] bg-surface-root/90 backdrop-blur-xl',
         )}
       >
         <Container>
@@ -114,7 +114,7 @@ export function Navbar() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-            className="glass fixed inset-0 z-40 md:hidden"
+            className="fixed inset-0 z-40 bg-surface-root/98 backdrop-blur-2xl md:hidden"
             aria-hidden="true"
           >
             <nav className="flex h-full flex-col px-6 pt-24 pb-10" aria-label="Mobile navigation">
