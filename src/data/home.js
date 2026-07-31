@@ -230,7 +230,7 @@ export const HOME_SEO = {
     name: 'Alqudabea Security Services W.L.L.',
     description:
       'Premium security services provider based in the Kingdom of Bahrain, offering manned guarding, CCTV surveillance, access control, cybersecurity, and risk assessment.',
-    url: 'http://localhost:5180',
+    url: 'https://alqudabeasecurity.online',
     address: {
       '@type': 'PostalAddress',
       addressLocality: 'Manama',

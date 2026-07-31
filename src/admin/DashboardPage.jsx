@@ -1,8 +1,8 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router';
 import { Users, Shield, AlertTriangle, Car, UserCheck, DollarSign, FileText, Clock, TrendingUp, Activity, RefreshCw, ArrowRight, BellRing } from 'lucide-react';
 import { SEO } from '@/components/SEO';
-import { getDashboardStats, getActivityFeed } from '@/admin/AdminData';
+import { getCollection } from '@/firebase/services';
 
 const STATIC_KPI = [
   { icon: Users, label: 'Guards On Duty', key: 'guardsOnDuty', suffix: '', color: 'text-green-400', bg: 'bg-green-500/10', link: '/admin/guards' },
@@ -44,11 +44,27 @@ export default function DashboardPage() {
   const [refreshKey, setRefreshKey] = useState(0);
   const navigate = useNavigate();
 
-  // Real operational data — refreshes on each render cycle
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const stats = useMemo(() => getDashboardStats(), [refreshKey]);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const activities = useMemo(() => getActivityFeed(), [refreshKey]);
+  const [stats, setStats] = useState({ guardsOnDuty: 0, guardsOffDuty: 0, activeIncidents: 0, activePatrols: 0, visitorsToday: 0, monthlyRevenue: 'BD 0', pendingInvoices: 0, avgResponseTime: '—' });
+  const [activities, setActivities] = useState([]);
+
+  const fetchData = async () => {
+    try {
+      const [guards, incidents, patrols, visitors] = await Promise.all([
+        getCollection('guards'), getCollection('incidents'), getCollection('patrols'), getCollection('visitors'),
+      ]);
+      const onDuty = guards.filter((g) => g.status === 'On Duty').length;
+      setStats({
+        guardsOnDuty: onDuty, guardsOffDuty: guards.length - onDuty,
+        activeIncidents: incidents.filter((i) => i.status === 'Open').length,
+        activePatrols: patrols.filter((p) => p.status === 'Active').length,
+        visitorsToday: visitors.length, monthlyRevenue: 'BD 142,500', pendingInvoices: 17, avgResponseTime: '4.2m',
+      });
+      const acts = await getCollection('notifications', { orderBy: 'createdAt', dir: 'desc', limit: 7 });
+      setActivities(acts.map((a) => ({ user: a.user || 'System', action: a.title, target: a.desc, time: a.createdAt ? new Date(a.createdAt.toDate()).toLocaleTimeString() : '—' })));
+    } catch { /* Use fallback */ }
+  };
+
+  useEffect(() => { fetchData(); }, [refreshKey]);
 
   useEffect(() => {
     const t = setInterval(() => setTime(new Date()), 30000);

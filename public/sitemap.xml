@@ -5,51 +5,51 @@
 >
   <!--
     ALQUDABEA SECURITY SERVICES W.L.L. — Sitemap
-    Update as new pages are added.
+    Production domain: https://alqudabeasecurity.online
   -->
 
   <!-- ── Primary Pages ──────────────────────────── -->
   <url>
-    <loc>https://alqudabea.com/</loc>
+    <loc>https://alqudabeasecurity.online/</loc>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
-    <xhtml:link rel="alternate" hreflang="en-BH" href="https://alqudabea.com/" />
-    <xhtml:link rel="alternate" hreflang="ar-BH" href="https://alqudabea.com/ar/" />
+    <xhtml:link rel="alternate" hreflang="en-BH" href="https://alqudabeasecurity.online/" />
+    <xhtml:link rel="alternate" hreflang="ar-BH" href="https://alqudabeasecurity.online/ar/" />
   </url>
 
   <url>
-    <loc>https://alqudabea.com/services</loc>
+    <loc>https://alqudabeasecurity.online/services</loc>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
 
   <url>
-    <loc>https://alqudabea.com/about</loc>
+    <loc>https://alqudabeasecurity.online/about</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
-    <loc>https://alqudabea.com/industries</loc>
+    <loc>https://alqudabeasecurity.online/industries</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
-    <loc>https://alqudabea.com/contact</loc>
+    <loc>https://alqudabeasecurity.online/contact</loc>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
 
   <!-- ── Legal ──────────────────────────────────── -->
   <url>
-    <loc>https://alqudabea.com/privacy</loc>
+    <loc>https://alqudabeasecurity.online/privacy</loc>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
 
   <url>
-    <loc>https://alqudabea.com/terms</loc>
+    <loc>https://alqudabeasecurity.online/terms</loc>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>

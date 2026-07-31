@@ -11,7 +11,7 @@ export const SITE = {
   tagline: 'Protecting Bahrain with trust, technology, and excellence.',
   description:
     "Alqudabea Security Services W.L.L. — a licensed, insured, and highly reputable security services provider in Bahrain. Uniformed officers, mobile patrols, CCTV monitoring, event security, and executive protection.",
-  url: import.meta.env.VITE_APP_URL || 'http://localhost:5180',
+  url: import.meta.env.VITE_APP_URL || 'https://alqudabeasecurity.online',
   locale: 'en-BH',
   ogImage: '/og-image.png',
   company: {

@@ -3,7 +3,6 @@ import { Routes, Route, useLocation } from 'react-router';
 import { useLenis } from '@/hooks/useLenis';
 import { RootLayout } from '@/layouts/RootLayout';
 import { HomePage } from '@/pages/HomePage';
-import { AdminAuthProvider } from '@/admin/AdminAuth';
 import { AdminLayout } from '@/admin/AdminLayout';
 import { trackPageView } from '@/services/analytics';
 
@@ -123,9 +122,9 @@ export default function App() {
         <Route path="terms" element={<PagePlaceholder title="Terms of Service" description="Terms and conditions for using our platform." />} />
       </Route>
       {/* Standalone routes — no Navbar/Footer */}
-      <Route path="login" element={<AdminAuthProvider><PageSuspense><LoginPage /></PageSuspense></AdminAuthProvider>} />
+      <Route path="login" element={<PageSuspense><LoginPage /></PageSuspense>} />
       {/* Admin routes — protected dashboard */}
-      <Route path="admin" element={<AdminAuthProvider><AdminLayout /></AdminAuthProvider>}>
+      <Route path="admin" element={<AdminLayout />}>
         <Route index element={<PageSuspense><DashboardPage /></PageSuspense>} />
         <Route path="dashboard" element={<PageSuspense><DashboardPage /></PageSuspense>} />
         <Route path="command" element={<PageSuspense><CommandPage /></PageSuspense>} />

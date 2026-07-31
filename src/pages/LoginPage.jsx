@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate, Navigate } from 'react-router';
 import { motion } from 'framer-motion';
 import { Eye, EyeOff, Lock, Mail, ArrowRight, AlertCircle } from 'lucide-react';
-import { useAdminAuth } from '@/admin/AdminAuth';
+import { useAuth } from '@/context/AuthContext';
 import { SEO } from '@/components/SEO';
 import { Container } from '@/components/Container';
 import { Button } from '@/components/Button';
@@ -13,7 +13,7 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState('admin@nexora.com');
   const [password, setPassword] = useState('12345');
-  const { user, loading, error, login } = useAdminAuth();
+  const { user, loading, error, login } = useAuth();
   const navigate = useNavigate();
 
   if (user) { return <Navigate to="/admin/dashboard" replace />; }
@@ -75,7 +75,7 @@ export default function LoginPage() {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="admin@alqudabeass.com"
+                  placeholder="admin@nexora.com"
                   className={inputCls}
                   autoComplete="email"
                   required

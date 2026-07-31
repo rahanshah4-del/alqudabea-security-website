@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Outlet, Link, useLocation, Navigate } from 'react-router';
 import { motion } from 'framer-motion';
 import { LayoutDashboard, Shield, Users, CalendarCheck, Clock, Building2, MapPin, Radio, AlertTriangle, UserCheck, Car, GraduationCap, DollarSign, TrendingUp, FileText, Settings, Sparkles, BellRing, Search, Menu, LogOut, Bell, PanelLeftClose, PanelLeft } from 'lucide-react';
-import { useAdminAuth } from '@/admin/AdminAuth';
+import { useAuth } from '@/context/AuthContext';
 import { cn } from '@/utils/cn';
 
 const NAV_ITEMS = [
@@ -27,7 +27,7 @@ const NAV_ITEMS = [
 ];
 
 export function AdminLayout() {
-  const { user, logout } = useAdminAuth();
+  const { user, logout } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
   const [showLogout, setShowLogout] = useState(false);

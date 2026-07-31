@@ -1,16 +1,16 @@
-# https://alqudabea.com/robots.txt
+# https://alqudabeasecurity.online/robots.txt
 # ALQUDABEA SECURITY SERVICES W.L.L.
 
 User-agent: *
 Allow: /
 
 # Sitemap
-Sitemap: https://alqudabea.com/sitemap.xml
+Sitemap: https://alqudabeasecurity.online/sitemap.xml
 
 # Crawl delay
 Crawl-delay: 10
 
-# Private paths (future)
+# Private paths
 Disallow: /admin/
 Disallow: /api/
 Disallow: /dashboard/
