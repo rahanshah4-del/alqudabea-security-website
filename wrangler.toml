@@ -1,5 +1,7 @@
 # Cloudflare Pages — Static Site Deployment
-# Vite React SPA — no Worker code required
+# Vite React SPA — no Worker code
 name = "alqudabea-security-website"
 compatibility_date = "2026-07-28"
-pages_build_output_dir = "./dist"
+
+[assets]
+directory = "./dist"
