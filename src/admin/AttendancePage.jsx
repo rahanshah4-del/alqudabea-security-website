@@ -1,32 +1,21 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Clock, AlertTriangle, Download, MapPin, Search, UserCheck, UserX } from 'lucide-react';
 import { SEO } from '@/components/SEO';
 import { cn } from '@/utils/cn';
-
-const ALL_GUARDS = [
-  { id: 'G-001', name: 'Ahmed Al Khalifa', dept: 'Manned Guarding', site: 'Manama HQ', shift: 'Morning' },
-  { id: 'G-002', name: 'Mohammed Hassan', dept: 'Mobile Patrol', site: 'Riffa Complex', shift: 'Morning' },
-  { id: 'G-003', name: 'Rajesh Kumar', dept: 'CCTV Monitoring', site: 'Seef District', shift: 'Morning' },
-  { id: 'G-004', name: 'Fatima Al Doseri', dept: 'Event Security', site: 'Manama HQ', shift: 'Evening' },
-  { id: 'G-005', name: 'John Smith', dept: 'VIP Protection', site: 'Amwaj Islands', shift: 'Evening' },
-  { id: 'G-006', name: 'Ali Mohammed', dept: 'Access Control', site: 'Muharraq Site', shift: 'Evening' },
-  { id: 'G-007', name: 'Sarah Ahmed', dept: 'Reception Security', site: 'Manama HQ', shift: 'Night' },
-  { id: 'G-008', name: 'Omar Farooq', dept: 'Industrial Security', site: 'Hidd Industrial', shift: 'Night' },
-];
+import { getCollection, addDocument, getDocument } from '@/firebase/services';
 
 export default function AttendancePage() {
-  const [records, setRecords] = useState([
-    { id: 'G-001', name: 'Ahmed Al Khalifa', timeIn: '05:52 AM', timeOut: '02:05 PM', status: 'On Time', dept: 'Manned Guarding', site: 'Manama HQ' },
-    { id: 'G-002', name: 'Mohammed Hassan', timeIn: '06:15 AM', timeOut: '02:00 PM', status: 'Late (15m)', dept: 'Mobile Patrol', site: 'Riffa Complex' },
-    { id: 'G-003', name: 'Rajesh Kumar', timeIn: '05:48 AM', timeOut: '02:10 PM', status: 'On Time', dept: 'CCTV Monitoring', site: 'Seef District' },
-    { id: 'G-004', name: 'Fatima Al Doseri', timeIn: '—', timeOut: '—', status: 'Absent', dept: 'Event Security', site: 'Manama HQ' },
-    { id: 'G-005', name: 'John Smith', timeIn: '02:02 PM', timeOut: '—', status: 'On Time', dept: 'VIP Protection', site: 'Amwaj Islands' },
-    { id: 'G-006', name: 'Ali Mohammed', timeIn: '02:18 PM', timeOut: '—', status: 'Late (18m)', dept: 'Access Control', site: 'Muharraq Site' },
-    { id: 'G-007', name: 'Sarah Ahmed', timeIn: '09:55 PM', timeOut: '—', status: 'On Time', dept: 'Reception Security', site: 'Manama HQ' },
-    { id: 'G-008', name: 'Omar Farooq', timeIn: '10:08 PM', timeOut: '—', status: 'Late (8m)', dept: 'Industrial Security', site: 'Hidd Industrial' },
-  ]);
+  const [records, setRecords] = useState([]);
+  const [allGuards, setAllGuards] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [clocking, setClocking] = useState(null);
+
+  useEffect(() => {
+    Promise.all([getCollection('attendance'), getCollection('guards')])
+      .then(([att, guards]) => { setRecords(att); setAllGuards(guards); setLoading(false); })
+      .catch(() => setLoading(false));
+  }, []);
 
   const onTime = records.filter((r) => r.status === 'On Time').length;
   const late = records.filter((r) => r.status.includes('Late')).length;
@@ -34,22 +23,19 @@ export default function AttendancePage() {
   const present = onTime + late;
   const total = records.length;
 
-  const handleClockIn = (guardId) => {
+  const handleClockIn = async (guardId) => {
     setClocking(guardId);
     const now = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
-    setTimeout(() => {
-      setRecords((prev) => prev.map((r) => r.id === guardId ? { ...r, timeIn: now, status: 'On Time' } : r));
-      setClocking(null);
-    }, 600);
+    await addDocument('attendance', { guardId, name: allGuards.find((g) => g.id === guardId)?.name || 'Unknown', timeIn: now, timeOut: '—', status: 'On Time', type: 'in', timestamp: new Date().toISOString() });
+    setRecords((prev) => prev.map((r) => r.id === guardId ? { ...r, timeIn: now, status: 'On Time' } : r));
+    setClocking(null);
   };
 
-  const handleClockOut = (guardId) => {
+  const handleClockOut = async (guardId) => {
     setClocking(guardId);
     const now = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
-    setTimeout(() => {
-      setRecords((prev) => prev.map((r) => r.id === guardId ? { ...r, timeOut: now } : r));
-      setClocking(null);
-    }, 600);
+    setRecords((prev) => prev.map((r) => r.id === guardId ? { ...r, timeOut: now } : r));
+    setClocking(null);
   };
 
   const filtered = records.filter((r) => r.name.toLowerCase().includes(search.toLowerCase()) || r.site.toLowerCase().includes(search.toLowerCase()) || r.dept.toLowerCase().includes(search.toLowerCase()));
@@ -86,7 +72,7 @@ export default function AttendancePage() {
       <div className="rounded-2xl border border-theme-muted bg-surface-raised p-5">
         <h2 className="mb-4 font-sans text-sm font-semibold text-theme-primary">Quick Clock Actions</h2>
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          {ALL_GUARDS.filter((g) => g.shift === 'Morning' || g.shift === 'Evening').slice(0, 4).map((g) => {
+          {allGuards.filter((g) => g.shift === 'Morning' || g.shift === 'Evening').slice(0, 4).map((g) => {
             const rec = records.find((r) => r.id === g.id);
             const isClockedIn = rec && rec.timeIn !== '—';
             const isClockedOut = rec && rec.timeOut !== '—';

@@ -1,19 +1,25 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Search, Plus, Phone, Mail, FileText, X, Building2, Trash2, Edit3, Check, Download } from 'lucide-react';
 import { SEO } from '@/components/SEO';
+import { ClientsAPI } from '@/firebase/services';
 import { getClients } from '@/admin/AdminData';
 
 const TYPES = ['All Types', 'Corporate', 'Hospitality', 'Healthcare', 'Banking', 'Construction', 'Education', 'Government'];
 const STATUSES = ['All Status', 'Active', 'Pending', 'Inactive'];
 
 export default function ClientsPage() {
-  const [clients, setClients] = useState(() => getClients());
+  const [clients, setClients] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [typeFilter, setTypeFilter] = useState('All Types');
   const [statusFilter, setStatusFilter] = useState('All Status');
   const [showForm, setShowForm] = useState(false);
   const [editId, setEditId] = useState(null);
   const [form, setForm] = useState({ name: '', type: 'Corporate', contact: '', phone: '', email: '', status: 'Active', branches: 1, billing: '', address: '' });
+
+  useEffect(() => {
+    getClients().then((data) => { setClients(data); setLoading(false); }).catch(() => setLoading(false));
+  }, []);
 
   const filtered = clients.filter((c) => {
     if (search && !c.name.toLowerCase().includes(search.toLowerCase()) && !c.contact.toLowerCase().includes(search.toLowerCase())) { return false; }
@@ -25,20 +31,27 @@ export default function ClientsPage() {
   const openAdd = () => { setEditId(null); setForm({ name: '', type: 'Corporate', contact: '', phone: '', email: '', status: 'Active', branches: 1, billing: '', address: '' }); setShowForm(true); };
   const openEdit = (c) => { setEditId(c.id); setForm({ name: c.name, type: c.type, contact: c.contact, phone: c.phone, email: c.email, status: c.status, branches: c.branches, billing: c.billing, address: c.address || '' }); setShowForm(true); };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!form.name.trim() || !form.contact.trim()) { return; }
     if (editId) {
+      await ClientsAPI.update(editId, form);
       setClients((prev) => prev.map((c) => c.id === editId ? { ...c, ...form } : c));
     } else {
-      const newId = `C-${String(clients.length + 1).padStart(3, '0')}`;
-      setClients((prev) => [...prev, { id: newId, ...form }]);
+      const newId = await ClientsAPI.add(form);
+      if (newId) { setClients((prev) => [{ id: newId, ...form }, ...prev]); }
     }
     setShowForm(false);
   };
 
-  const handleDelete = (id) => { setClients((prev) => prev.filter((c) => c.id !== id)); };
-  const toggleStatus = (id) => {
-    setClients((prev) => prev.map((c) => c.id === id ? { ...c, status: c.status === 'Active' ? 'Inactive' : 'Active' } : c));
+  const handleDelete = async (id) => {
+    await ClientsAPI.delete(id);
+    setClients((prev) => prev.filter((c) => c.id !== id));
+  };
+  const toggleStatus = async (id) => {
+    const client = clients.find((c) => c.id === id);
+    const newStatus = client.status === 'Active' ? 'Inactive' : 'Active';
+    await ClientsAPI.update(id, { status: newStatus });
+    setClients((prev) => prev.map((c) => c.id === id ? { ...c, status: newStatus } : c));
   };
 
   const statusCls = (s) => s === 'Active' ? 'bg-green-500/10 text-green-400' : s === 'Pending' ? 'bg-amber-500/10 text-amber-400' : 'bg-neutral-500/10 text-neutral-400';
@@ -49,7 +62,7 @@ export default function ClientsPage() {
     <div className="space-y-6">
       <SEO title="Clients — Admin" noIndex />
       <div className="flex items-center justify-between gap-4">
-        <div><h1 className="font-sans text-2xl font-bold tracking-[-0.02em] text-theme-primary">Client Management</h1><p className="mt-1 text-sm text-theme-muted">{clients.length} clients · {clients.filter((c) => c.status === 'Active').length} active</p></div>
+        <div><h1 className="font-sans text-2xl font-bold tracking-[-0.02em] text-theme-primary">Client Management</h1><p className="mt-1 text-sm text-theme-muted">{loading ? 'Loading...' : `${clients.length} clients · ${clients.filter((c) => c.status === 'Active').length} active`}</p></div>
         <div className="flex gap-2">
           <button onClick={() => window.print()} className="flex items-center gap-2 rounded-xl border border-theme-muted px-3 py-2.5 text-sm text-theme-secondary transition-all hover:border-accent-500/30"><Download className="h-4 w-4" /></button>
           <button onClick={openAdd} className="flex items-center gap-2 rounded-xl bg-accent-500 px-4 py-2.5 text-sm font-medium text-white transition-all hover:bg-accent-400"><Plus className="h-4 w-4" /> Add Client</button>
@@ -60,31 +73,36 @@ export default function ClientsPage() {
         <select value={typeFilter} onChange={(e) => setTypeFilter(e.target.value)} className={selectCls}>{TYPES.map((t) => <option key={t}>{t}</option>)}</select>
         <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)} className={selectCls}>{STATUSES.map((s) => <option key={s}>{s}</option>)}</select>
       </div>
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {filtered.map((c) => (
-          <div key={c.id} className="group rounded-2xl border border-theme-muted bg-surface-raised p-5 transition-all hover:-translate-y-1 hover:border-accent-500/30 hover:shadow-lg">
-            <div className="flex items-start justify-between">
-              <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-accent-500/10 text-sm font-bold text-accent-400">{c.name.split(' ').map((n) => n[0]).join('').slice(0, 2)}</div>
-                <div><p className="font-medium text-theme-primary">{c.name}</p><p className="text-[10px] text-theme-muted">{c.type} · {c.branches} branch{ c.branches !== 1 ? 'es' : '' }</p></div>
-              </div>
-              <button onClick={() => toggleStatus(c.id)} className={`rounded-lg px-2 py-0.5 text-[10px] font-bold transition-all hover:opacity-80 ${statusCls(c.status)}`}>{c.status}</button>
-            </div>
-            <div className="mt-4 space-y-1.5 text-xs">
-              <a href={`tel:${c.phone.replace(/\s/g, '')}`} className="flex items-center gap-2 text-theme-muted transition-colors hover:text-accent-400"><Phone className="h-3 w-3" /> {c.phone}</a>
-              <a href={`mailto:${c.email}`} className="flex items-center gap-2 text-theme-muted transition-colors hover:text-accent-400"><Mail className="h-3 w-3" /> {c.email}</a>
-              <div className="flex items-center gap-2 text-theme-muted"><FileText className="h-3 w-3" /> {c.billing}</div>
-            </div>
-            <div className="mt-3 flex gap-1 border-t border-theme-muted pt-3">
-              <button onClick={() => openEdit(c)} className="flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-[10px] text-theme-muted transition-colors hover:bg-surface-muted/60 hover:text-accent-400"><Edit3 className="h-3 w-3" /> Edit</button>
-              <button onClick={() => handleDelete(c.id)} className="ml-auto flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-[10px] text-theme-muted transition-colors hover:bg-danger-500/10 hover:text-danger-400"><Trash2 className="h-3 w-3" /> Delete</button>
-            </div>
-          </div>
-        ))}
-      </div>
-      {filtered.length === 0 && <div className="py-16 text-center"><Building2 className="mx-auto h-10 w-10 text-theme-muted" /><p className="mt-3 text-sm text-theme-muted">No clients match your filters</p></div>}
 
-      {/* Add/Edit Modal */}
+      {loading ? (
+        <div className="py-16 text-center"><div className="mx-auto h-8 w-8 animate-spin rounded-full border-2 border-accent-500 border-t-transparent" /><p className="mt-4 text-sm text-theme-muted">Loading clients...</p></div>
+      ) : filtered.length === 0 ? (
+        <div className="py-16 text-center"><Building2 className="mx-auto h-10 w-10 text-theme-muted" /><p className="mt-3 text-sm text-theme-muted">{clients.length === 0 ? 'No clients added yet. Click "Add Client" to get started.' : 'No clients match your filters.'}</p></div>
+      ) : (
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {filtered.map((c) => (
+            <div key={c.id} className="group rounded-2xl border border-theme-muted bg-surface-raised p-5 transition-all hover:-translate-y-1 hover:border-accent-500/30 hover:shadow-lg">
+              <div className="flex items-start justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-accent-500/10 text-sm font-bold text-accent-400">{c.name.split(' ').map((n) => n[0]).join('').slice(0, 2)}</div>
+                  <div><p className="font-medium text-theme-primary">{c.name}</p><p className="text-[10px] text-theme-muted">{c.type} · {c.branches} branch{c.branches !== 1 ? 'es' : ''}</p></div>
+                </div>
+                <button onClick={() => toggleStatus(c.id)} className={`rounded-lg px-2 py-0.5 text-[10px] font-bold transition-all hover:opacity-80 ${statusCls(c.status)}`}>{c.status}</button>
+              </div>
+              <div className="mt-4 space-y-1.5 text-xs">
+                <a href={`tel:${c.phone.replace(/\s/g, '')}`} className="flex items-center gap-2 text-theme-muted transition-colors hover:text-accent-400"><Phone className="h-3 w-3" /> {c.phone}</a>
+                <a href={`mailto:${c.email}`} className="flex items-center gap-2 text-theme-muted transition-colors hover:text-accent-400"><Mail className="h-3 w-3" /> {c.email}</a>
+                <div className="flex items-center gap-2 text-theme-muted"><FileText className="h-3 w-3" /> {c.billing}</div>
+              </div>
+              <div className="mt-3 flex gap-1 border-t border-theme-muted pt-3">
+                <button onClick={() => openEdit(c)} className="flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-[10px] text-theme-muted transition-colors hover:bg-surface-muted/60 hover:text-accent-400"><Edit3 className="h-3 w-3" /> Edit</button>
+                <button onClick={() => handleDelete(c.id)} className="ml-auto flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-[10px] text-theme-muted transition-colors hover:bg-danger-500/10 hover:text-danger-400"><Trash2 className="h-3 w-3" /> Delete</button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
       {showForm && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center p-4" role="dialog" aria-modal="true">
           <button className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setShowForm(false)} aria-label="Close" />

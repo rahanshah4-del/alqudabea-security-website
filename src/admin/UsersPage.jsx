@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Shield, Search, X, Check, Edit3, Trash2, UserPlus, Key, ToggleLeft, ToggleRight, Settings } from 'lucide-react';
 import { SEO } from '@/components/SEO';
 import { cn } from '@/utils/cn';
+import { getCollection, addDocument, updateDocument, deleteDocument } from '@/firebase/services';
 
 const ALL_PERMISSIONS = [
   { id: 'dashboard', label: 'Dashboard', icon: '📊' },
@@ -33,16 +34,13 @@ const DEFAULT_ROLES = {
   reception: ['visitors'],
 };
 
-const INITIAL_USERS = [
-  { id: 'U-001', name: 'Admin User', email: 'admin@nexora.com', role: 'admin', status: 'Active', lastLogin: 'Today 08:45 AM' },
-  { id: 'U-002', name: 'Khalid Al Ansari', email: 'khalid@alqudabea.com', role: 'manager', status: 'Active', lastLogin: 'Today 09:30 AM' },
-  { id: 'U-003', name: 'Noor Al Balooshi', email: 'noor@alqudabea.com', role: 'supervisor', status: 'Active', lastLogin: 'Yesterday 04:15 PM' },
-  { id: 'U-004', name: 'Ahmed Reception', email: 'reception@alqudabea.com', role: 'reception', status: 'Active', lastLogin: 'Today 07:00 AM' },
-  { id: 'U-005', name: 'Fatima Operator', email: 'operator@alqudabea.com', role: 'operator', status: 'Inactive', lastLogin: 'Jul 25 2026' },
-];
-
 export default function UsersPage() {
-  const [users, setUsers] = useState(INITIAL_USERS);
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    getCollection('users').then((data) => { setUsers(data); setLoading(false); }).catch(() => setLoading(false));
+  }, []);
   const [rolePerms, setRolePerms] = useState(DEFAULT_ROLES);
   const [search, setSearch] = useState('');
   const [showForm, setShowForm] = useState(false);
@@ -65,13 +63,18 @@ export default function UsersPage() {
 
   const openAdd = () => { setEditId(null); setForm({ name: '', email: '', role: 'operator', password: '', status: 'Active' }); setShowForm(true); };
   const openEdit = (u) => { setEditId(u.id); setForm({ name: u.name, email: u.email, role: u.role, password: '', status: u.status }); setShowForm(true); };
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!form.name.trim() || !form.email.trim()) { return; }
-    if (editId) { setUsers((prev) => prev.map((u) => u.id === editId ? { ...u, name: form.name, email: form.email, role: form.role, status: form.status } : u)); }
-    else { const newId = `U-${String(users.length + 1).padStart(3, '0')}`; setUsers((prev) => [...prev, { id: newId, ...form, lastLogin: 'Never' }]); }
+    if (editId) {
+      await updateDocument('users', editId, { name: form.name, email: form.email, role: form.role, status: form.status });
+      setUsers((prev) => prev.map((u) => u.id === editId ? { ...u, name: form.name, email: form.email, role: form.role, status: form.status } : u));
+    } else {
+      const newId = await addDocument('users', { ...form, lastLogin: 'Never' });
+      if (newId) { setUsers((prev) => [...prev, { id: newId, ...form, lastLogin: 'Never' }]); }
+    }
     setShowForm(false);
   };
-  const handleDelete = (id) => { setUsers((prev) => prev.filter((u) => u.id !== id)); };
+  const handleDelete = async (id) => { await deleteDocument('users', id); setUsers((prev) => prev.filter((u) => u.id !== id)); };
   const hasPerm = (role, perm) => { const p = rolePerms[role] || []; return p.includes('all') || p.includes(perm); };
 
   const inputCls = 'w-full rounded-xl border border-theme-muted bg-surface-muted/40 px-4 py-2.5 text-sm text-theme-primary placeholder:text-theme-muted focus:border-accent-500 focus:outline-none';

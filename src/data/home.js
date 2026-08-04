@@ -239,7 +239,7 @@ export const HOME_SEO = {
     contactPoint: {
       '@type': 'ContactPoint',
       contactType: 'Sales',
-      telephone: '+973-0000-0000',
+      telephone: '+973 7790 7878',
     },
   },
 };

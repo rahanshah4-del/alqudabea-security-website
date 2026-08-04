@@ -1,8 +1,9 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router';
 import { Shield, AlertTriangle, Car, MapPin, Thermometer, Search, Users, Building2, TrendingUp, Download, UserPlus, Plus, QrCode, Clock, FileText, Sun, Bell, MessageSquare, Send, X, Cloud, RefreshCw } from 'lucide-react';
 import { SEO } from '@/components/SEO';
 import { getGuards, getClients, getSites } from '@/admin/AdminData';
+import { getCollection, addDocument, updateDocument, deleteDocument } from '@/firebase/services';
 import { cn } from '@/utils/cn';
 
 function LiveClock() {
@@ -12,16 +13,28 @@ function LiveClock() {
 }
 
 export default function CommandPage() {
-  const guards = useMemo(() => getGuards(), []);
-  const clients = useMemo(() => getClients(), []);
-  const sites = useMemo(() => getSites(), []);
+  const [guards, setGuards] = useState([]);
+  const [clients, setClients] = useState([]);
+  const [sites, setSites] = useState([]);
+  const [marketingLeads, setMarketingLeads] = useState([]);
+  const [patrols, setPatrols] = useState([]);
+  const [incidents, setIncidents] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
+
+  useEffect(() => {
+    Promise.all([getGuards(), getClients(), getSites(), getCollection('marketing'), getCollection('patrols'), getCollection('incidents')])
+      .then(([g, c, s, m, p, i]) => { setGuards(g); setClients(c); setSites(s); setMarketingLeads(m); setPatrols(p); setIncidents(i); setLoading(false); })
+      .catch(() => setLoading(false));
+  }, []);
 
   const onDuty = guards.filter((g) => g.status === 'On Duty');
   const offDuty = guards.filter((g) => g.status === 'Off Duty');
   const onLeave = guards.filter((g) => g.status === 'Leave');
   const activeSites = sites.filter((s) => s.status === 'Active');
-  const allSearchable = [...guards.map((g) => ({ type: 'Guard', ...g })), ...clients.map((c) => ({ type: 'Client', ...c })), ...sites.map((s) => ({ type: 'Site', ...s })), { type: 'Lead', company: 'Gulf Air', contact: 'Khalid Al Ansari', value: 'BD 52,000' }, { type: 'Lead', company: 'BAPCO', contact: 'Nasser Al Dossari', value: 'BD 85,000' }, { type: 'Lead', company: 'Bahrain Mall', contact: 'Mariam Al Khalifa', value: 'BD 22,000' }];
+  const activePatrols = patrols.filter((p) => p.status === 'Active').length;
+  const openIncidents = incidents.filter((i) => i.status === 'Open').length;
+  const allSearchable = [...guards.map((g) => ({ type: 'Guard', ...g })), ...clients.map((c) => ({ type: 'Client', ...c })), ...sites.map((s) => ({ type: 'Site', ...s })), ...marketingLeads.map((l) => ({ type: 'Lead', ...l }))];
   const searchResults = search.trim() ? allSearchable.filter((item) => { const text = (item.name || item.company || '').toLowerCase(); const contact = (item.contact || '').toLowerCase(); const q = search.toLowerCase(); return text.includes(q) || contact.includes(q); }) : [];
   const grouped = { Guard: searchResults.filter((r) => r.type === 'Guard'), Client: searchResults.filter((r) => r.type === 'Client'), Site: searchResults.filter((r) => r.type === 'Site'), Lead: searchResults.filter((r) => r.type === 'Lead') };
 
@@ -50,8 +63,8 @@ export default function CommandPage() {
         {[
           { icon: Users, label: 'Guards On Duty', value: onDuty.length, total: guards.length, pct: Math.round((onDuty.length/guards.length)*100), color: 'text-blue-400', bg: 'from-blue-500/20 to-blue-600/5', bar: 'bg-blue-500' },
           { icon: Shield, label: 'Active Sites', value: activeSites.length, total: sites.length, pct: Math.round((activeSites.length/sites.length)*100), color: 'text-green-400', bg: 'from-green-500/20 to-green-600/5', bar: 'bg-green-500' },
-          { icon: AlertTriangle, label: 'Incidents Today', value: 3, total: 0, pct: 100, color: 'text-danger-400', bg: 'from-danger-500/20 to-danger-600/5', bar: 'bg-danger-500' },
-          { icon: Car, label: 'Active Patrols', value: 24, total: 28, pct: 86, color: 'text-cyan-400', bg: 'from-cyan-500/20 to-cyan-600/5', bar: 'bg-cyan-500' },
+          { icon: AlertTriangle, label: 'Open Incidents', value: openIncidents, total: incidents.length, pct: incidents.length > 0 ? Math.round((openIncidents / incidents.length) * 100) : 0, color: 'text-danger-400', bg: 'from-danger-500/20 to-danger-600/5', bar: 'bg-danger-500' },
+          { icon: Car, label: 'Active Patrols', value: activePatrols, total: patrols.length, pct: patrols.length > 0 ? Math.round((activePatrols / patrols.length) * 100) : 0, color: 'text-cyan-400', bg: 'from-cyan-500/20 to-cyan-600/5', bar: 'bg-cyan-500' },
         ].map((k) => (
           <div key={k.label} className="group relative overflow-hidden rounded-2xl border border-theme-muted bg-surface-raised p-5 transition-all hover:-translate-y-1 hover:shadow-xl">
             <div className={`pointer-events-none absolute inset-0 bg-gradient-to-br ${k.bg} opacity-30`} />
@@ -153,24 +166,29 @@ export default function CommandPage() {
 }
 
 function ComplaintSection() {
-  const [complaints, setComplaints] = useState([
-    { id: 1, user: 'Ahmed Reception', subject: 'Gate B card reader not working', priority: 'High', status: 'Open', time: '10:30 AM', notes: 'Technician notified' },
-    { id: 2, user: 'Sarah Ahmed', subject: 'Visitor parking area needs lighting repair', priority: 'Medium', status: 'In Progress', time: '09:15 AM', notes: 'Maintenance scheduled' },
-    { id: 3, user: 'Khalid Al Ansari', subject: 'CCTV camera offline — Seef entrance', priority: 'High', status: 'Open', time: '08:00 AM', notes: 'Awaiting vendor' },
-  ]);
+  const [complaints, setComplaints] = useState([]);
+  const [complaintsLoaded, setComplaintsLoaded] = useState(false);
+
+  useEffect(() => {
+    getCollection('complaints').then((data) => { setComplaints(data); setComplaintsLoaded(true); }).catch(() => setComplaintsLoaded(true));
+  }, []);
   const [newComplaint, setNewComplaint] = useState({ subject: '', priority: 'Medium', notes: '' });
   const [complaintSearch, setComplaintSearch] = useState('');
 
   const filteredComplaints = complaints.filter((c) => c.subject.toLowerCase().includes(complaintSearch.toLowerCase()) || c.user.toLowerCase().includes(complaintSearch.toLowerCase()));
 
-  const handleAdd = () => {
+  const handleAdd = async () => {
     if (!newComplaint.subject.trim()) { return; }
-    setComplaints((prev) => [{ id: Date.now(), user: 'Admin User', subject: newComplaint.subject, priority: newComplaint.priority, status: 'Open', time: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }), notes: newComplaint.notes }, ...prev]);
+    const newId = await addDocument('complaints', { user: 'Admin User', subject: newComplaint.subject, priority: newComplaint.priority, status: 'Open', time: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }), notes: newComplaint.notes, createdAt: new Date().toISOString() });
+    if (newId) { setComplaints((prev) => [{ id: newId, user: 'Admin User', subject: newComplaint.subject, priority: newComplaint.priority, status: 'Open', time: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }), notes: newComplaint.notes }, ...prev]); }
     setNewComplaint({ subject: '', priority: 'Medium', notes: '' });
   };
 
-  const toggleStatus = (id) => {
-    setComplaints((prev) => prev.map((c) => c.id === id ? { ...c, status: c.status === 'Open' ? 'In Progress' : c.status === 'In Progress' ? 'Resolved' : 'Open' } : c));
+  const toggleStatus = async (id) => {
+    const complaint = complaints.find((c) => c.id === id);
+    const newStatus = complaint.status === 'Open' ? 'In Progress' : complaint.status === 'In Progress' ? 'Resolved' : 'Open';
+    await updateDocument('complaints', id, { status: newStatus });
+    setComplaints((prev) => prev.map((c) => c.id === id ? { ...c, status: newStatus } : c));
   };
 
   return (
@@ -197,7 +215,7 @@ function ComplaintSection() {
             <td className="px-3 py-2"><span className={cn('rounded px-2 py-0.5 text-[9px] font-bold', c.priority==='High'||c.priority==='Critical'?'bg-danger-500/10 text-danger-400':c.priority==='Medium'?'bg-amber-500/10 text-amber-400':'bg-blue-500/10 text-blue-400')}>{c.priority}</span></td>
             <td className="px-3 py-2"><button onClick={() => toggleStatus(c.id)} className={cn('rounded px-2 py-0.5 text-[9px] font-bold', c.status==='Open'?'bg-danger-500/10 text-danger-400':c.status==='In Progress'?'bg-blue-500/10 text-blue-400':'bg-green-500/10 text-green-400')}>{c.status}</button></td>
             <td className="px-3 py-2 text-theme-muted">{c.time}</td><td className="px-3 py-2 text-theme-muted">{c.notes}</td>
-            <td className="px-3 py-2"><button onClick={() => setComplaints((prev) => prev.filter((x) => x.id !== c.id))} className="text-theme-muted hover:text-danger-400"><X className="h-3 w-3" /></button></td>
+            <td className="px-3 py-2"><button onClick={async () => { await deleteDocument('complaints', c.id); setComplaints((prev) => prev.filter((x) => x.id !== c.id)); }} className="text-theme-muted hover:text-danger-400"><X className="h-3 w-3" /></button></td>
           </tr>
         ))}</tbody>
       </table></div>
@@ -220,7 +238,7 @@ function NexoraCloudButton() {
       const { setDocument } = await import('@/firebase/services');
       const syncData = {
         syncedAt: new Date().toISOString(),
-        guards: 512, onDuty: 387, offDuty: 125, clients: 6, sites: 8, incidents: 3, patrols: 24,
+        guards: guards.length, onDuty: onDuty.length, offDuty: offDuty.length, clients: clients.length, sites: sites.length, incidents: incidents.length, patrols: patrols.length,
       };
       await setDocument('company', 'dashboard_stats', syncData);
       const now = Date.now();

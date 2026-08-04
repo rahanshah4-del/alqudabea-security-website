@@ -1,39 +1,41 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { QrCode, Clock, Car, Plus, Download, X, Check, Search, LogOut, Trash2 } from 'lucide-react';
 import { SEO } from '@/components/SEO';
-
-const INITIAL = [
-  { id: 'V-001', name: 'Abdulrahman Al Qahtani', host: 'Capt. Rashid', purpose: 'Meeting', entry: '09:15 AM', exit: '10:45 AM', vehicle: 'BH-12345', status: 'Exited' },
-  { id: 'V-002', name: 'Emily Watson', host: 'Sarah Wilson', purpose: 'Site Inspection', entry: '10:00 AM', exit: '—', vehicle: 'BH-67890', status: 'Inside' },
-  { id: 'V-003', name: 'Mohammed Al Buainain', host: 'Khalid Al Ansari', purpose: 'Contractor', entry: '11:30 AM', exit: '—', vehicle: 'BH-34567', status: 'Inside' },
-  { id: 'V-004', name: 'Fatima Al Noaimi', host: 'Noor Al Balooshi', purpose: 'Interview', entry: '12:00 PM', exit: '12:45 PM', vehicle: '—', status: 'Exited' },
-  { id: 'V-005', name: 'James Wilson', host: 'Abdullah Al Khalifa', purpose: 'Vendor Meeting', entry: '01:30 PM', exit: '03:15 PM', vehicle: 'BH-89012', status: 'Exited' },
-];
+import { getCollection, addDocument, updateDocument, deleteDocument } from '@/firebase/services';
 
 export default function VisitorsPage() {
-  const [visitors, setVisitors] = useState(INITIAL);
+  const [visitors, setVisitors] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState({ name: '', host: '', purpose: 'Meeting', vehicle: '' });
   const [qrPass, setQrPass] = useState(null);
 
+  useEffect(() => {
+    getCollection('visitors').then((data) => { setVisitors(data); setLoading(false); }).catch(() => setLoading(false));
+  }, []);
+
   const filtered = visitors.filter((v) => v.name.toLowerCase().includes(search.toLowerCase()) || v.host.toLowerCase().includes(search.toLowerCase()));
   const insideCount = visitors.filter((v) => v.status === 'Inside').length;
 
-  const handleAdd = () => {
+  const handleAdd = async () => {
     if (!form.name.trim() || !form.host.trim()) { return; }
     const now = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
-    const newId = `V-${String(visitors.length + 1).padStart(3, '0')}`;
-    setVisitors((prev) => [{ id: newId, ...form, entry: now, exit: '—', status: 'Inside' }, ...prev]);
+    const newId = await addDocument('visitors', { ...form, entry: now, exit: '—', status: 'Inside' });
+    if (newId) { setVisitors((prev) => [{ id: newId, ...form, entry: now, exit: '—', status: 'Inside' }, ...prev]); }
     setForm({ name: '', host: '', purpose: 'Meeting', vehicle: '' }); setShowForm(false);
   };
 
-  const handleCheckOut = (id) => {
+  const handleCheckOut = async (id) => {
     const now = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+    await updateDocument('visitors', id, { exit: now, status: 'Exited' });
     setVisitors((prev) => prev.map((v) => v.id === id ? { ...v, exit: now, status: 'Exited' } : v));
   };
 
-  const handleDelete = (id) => { setVisitors((prev) => prev.filter((v) => v.id !== id)); };
+  const handleDelete = async (id) => {
+    await deleteDocument('visitors', id);
+    setVisitors((prev) => prev.filter((v) => v.id !== id));
+  };
   const handleQr = () => { setQrPass(`ALQ-VISITOR-${Date.now().toString(36).toUpperCase()}`); setTimeout(() => setQrPass(null), 4000); };
 
   const inputCls = 'w-full rounded-xl border border-theme-muted bg-surface-muted/40 px-4 py-2.5 text-sm text-theme-primary placeholder:text-theme-muted focus:border-accent-500 focus:outline-none';
@@ -42,7 +44,7 @@ export default function VisitorsPage() {
     <div className="space-y-6">
       <SEO title="Visitors — Admin" noIndex />
       <div className="flex items-center justify-between gap-4">
-        <div><h1 className="font-sans text-2xl font-bold tracking-[-0.02em] text-theme-primary">Visitor Management</h1><p className="mt-1 text-sm text-theme-muted">{visitors.length} total · {insideCount} currently inside</p></div>
+        <div><h1 className="font-sans text-2xl font-bold tracking-[-0.02em] text-theme-primary">Visitor Management</h1><p className="mt-1 text-sm text-theme-muted">{loading ? 'Loading...' : `${visitors.length} total · ${insideCount} currently inside`}</p></div>
         <div className="flex gap-2">
           <button onClick={handleQr} className="flex items-center gap-2 rounded-xl border border-theme-muted px-3 py-2.5 text-sm text-theme-secondary transition-all hover:border-accent-500/30">{qrPass ? <><Check className="h-4 w-4 text-green-400" /> Generated!</> : <><QrCode className="h-4 w-4" /> QR Pass</>}</button>
           <button onClick={() => window.print()} className="flex items-center gap-2 rounded-xl border border-theme-muted p-2.5 text-sm text-theme-secondary transition-all hover:border-accent-500/30"><Download className="h-4 w-4" /></button>
@@ -66,27 +68,33 @@ export default function VisitorsPage() {
 
       <div className="relative"><Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-theme-muted" /><input type="text" placeholder="Search visitors..." value={search} onChange={(e) => setSearch(e.target.value)} className="w-full rounded-xl border border-theme-muted bg-surface-raised py-2.5 pl-10 pr-4 text-sm text-theme-primary placeholder:text-theme-muted focus:border-accent-500 focus:outline-none" /></div>
 
-      <div className="overflow-x-auto rounded-2xl border border-theme-muted">
-        <table className="w-full text-left text-sm">
-          <thead className="border-b border-theme-muted bg-surface-muted/40"><tr>
-            <th className="px-4 py-3 font-mono text-[10px] uppercase tracking-wider text-theme-muted">Visitor</th><th className="px-4 py-3 font-mono text-[10px] uppercase tracking-wider text-theme-muted">Host</th><th className="px-4 py-3 font-mono text-[10px] uppercase tracking-wider text-theme-muted">Purpose</th><th className="px-4 py-3 font-mono text-[10px] uppercase tracking-wider text-theme-muted">Entry</th><th className="px-4 py-3 font-mono text-[10px] uppercase tracking-wider text-theme-muted">Exit</th><th className="px-4 py-3 font-mono text-[10px] uppercase tracking-wider text-theme-muted">Vehicle</th><th className="px-4 py-3 font-mono text-[10px] uppercase tracking-wider text-theme-muted">Status</th><th className="px-4 py-3" />
-          </tr></thead>
-          <tbody>{filtered.map((v) => (
-            <tr key={v.id} className="border-b border-theme-muted transition-colors hover:bg-surface-muted/40">
-              <td className="px-4 py-3 font-medium text-theme-primary">{v.name}</td><td className="px-4 py-3 text-theme-secondary">{v.host}</td><td className="px-4 py-3 text-theme-secondary">{v.purpose}</td>
-              <td className="px-4 py-3 text-theme-secondary">{v.entry}</td><td className="px-4 py-3 text-theme-secondary">{v.exit}</td>
-              <td className="px-4 py-3 font-mono text-xs text-theme-muted">{v.vehicle}</td>
-              <td className="px-4 py-3"><span className={`rounded-lg px-2 py-0.5 text-[10px] font-bold ${v.status === 'Inside' ? 'bg-green-500/10 text-green-400' : 'bg-neutral-500/10 text-neutral-400'}`}>{v.status}</span></td>
-              <td className="px-4 py-3">
-                <div className="flex gap-1">
-                  {v.status === 'Inside' && <button onClick={() => handleCheckOut(v.id)} className="rounded-lg p-1.5 text-theme-muted hover:bg-surface-overlay hover:text-amber-400" title="Check Out"><LogOut className="h-3.5 w-3.5" /></button>}
-                  <button onClick={() => handleDelete(v.id)} className="rounded-lg p-1.5 text-theme-muted hover:bg-surface-overlay hover:text-danger-400" title="Delete"><Trash2 className="h-3.5 w-3.5" /></button>
-                </div>
-              </td>
-            </tr>
-          ))}</tbody>
-        </table>
-      </div>
+      {loading ? (
+        <div className="py-16 text-center"><div className="mx-auto h-8 w-8 animate-spin rounded-full border-2 border-accent-500 border-t-transparent" /><p className="mt-4 text-sm text-theme-muted">Loading visitors...</p></div>
+      ) : filtered.length === 0 ? (
+        <div className="py-16 text-center"><QrCode className="mx-auto h-10 w-10 text-theme-muted" /><p className="mt-3 text-sm text-theme-muted">{visitors.length === 0 ? 'No visitors yet. Click "New Pass" to register one.' : 'No visitors match your search.'}</p></div>
+      ) : (
+        <div className="overflow-x-auto rounded-2xl border border-theme-muted">
+          <table className="w-full text-left text-sm">
+            <thead className="border-b border-theme-muted bg-surface-muted/40"><tr>
+              <th className="px-4 py-3 font-mono text-[10px] uppercase tracking-wider text-theme-muted">Visitor</th><th className="px-4 py-3 font-mono text-[10px] uppercase tracking-wider text-theme-muted">Host</th><th className="px-4 py-3 font-mono text-[10px] uppercase tracking-wider text-theme-muted">Purpose</th><th className="px-4 py-3 font-mono text-[10px] uppercase tracking-wider text-theme-muted">Entry</th><th className="px-4 py-3 font-mono text-[10px] uppercase tracking-wider text-theme-muted">Exit</th><th className="px-4 py-3 font-mono text-[10px] uppercase tracking-wider text-theme-muted">Vehicle</th><th className="px-4 py-3 font-mono text-[10px] uppercase tracking-wider text-theme-muted">Status</th><th className="px-4 py-3" />
+            </tr></thead>
+            <tbody>{filtered.map((v) => (
+              <tr key={v.id} className="border-b border-theme-muted transition-colors hover:bg-surface-muted/40">
+                <td className="px-4 py-3 font-medium text-theme-primary">{v.name}</td><td className="px-4 py-3 text-theme-secondary">{v.host}</td><td className="px-4 py-3 text-theme-secondary">{v.purpose}</td>
+                <td className="px-4 py-3 text-theme-secondary">{v.entry}</td><td className="px-4 py-3 text-theme-secondary">{v.exit}</td>
+                <td className="px-4 py-3 font-mono text-xs text-theme-muted">{v.vehicle}</td>
+                <td className="px-4 py-3"><span className={`rounded-lg px-2 py-0.5 text-[10px] font-bold ${v.status === 'Inside' ? 'bg-green-500/10 text-green-400' : 'bg-neutral-500/10 text-neutral-400'}`}>{v.status}</span></td>
+                <td className="px-4 py-3">
+                  <div className="flex gap-1">
+                    {v.status === 'Inside' && <button onClick={() => handleCheckOut(v.id)} className="rounded-lg p-1.5 text-theme-muted hover:bg-surface-overlay hover:text-amber-400" title="Check Out"><LogOut className="h-3.5 w-3.5" /></button>}
+                    <button onClick={() => handleDelete(v.id)} className="rounded-lg p-1.5 text-theme-muted hover:bg-surface-overlay hover:text-danger-400" title="Delete"><Trash2 className="h-3.5 w-3.5" /></button>
+                  </div>
+                </td>
+              </tr>
+            ))}</tbody>
+          </table>
+        </div>
+      )}
 
       {showForm && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center p-4" role="dialog" aria-modal="true">

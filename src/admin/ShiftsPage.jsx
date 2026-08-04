@@ -1,8 +1,9 @@
-import { useState, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import { Sun, Moon, Sunset, ChevronLeft, ChevronRight, Plus, RefreshCw, X, Check, Edit3, Trash2 } from 'lucide-react';
 import { SEO } from '@/components/SEO';
 import { cn } from '@/utils/cn';
 import { getShifts } from '@/admin/AdminData';
+import { addDocument, updateDocument, deleteDocument } from '@/firebase/services';
 
 const TABS = [
   { id: 'morning', label: 'Morning', icon: Sun, color: 'text-amber-400', border: 'border-amber-500/30', bg: 'bg-amber-500/5' },
@@ -11,13 +12,20 @@ const TABS = [
 ];
 
 export default function ShiftsPage() {
-  const data = useMemo(() => getShifts(), []);
-  const [shifts, setShifts] = useState({ morning: data.morning, evening: data.evening, night: data.night });
+  const [shifts, setShifts] = useState({ morning: [], evening: [], night: [] });
+  const [loading, setLoading] = useState(true);
   const [tab, setTab] = useState('morning');
   const [weekOffset, setWeekOffset] = useState(0);
   const [showForm, setShowForm] = useState(false);
   const [editId, setEditId] = useState(null);
   const [form, setForm] = useState({ name: '', site: '', time: '', days: 'Sun-Thu', shift: 'morning' });
+
+  useEffect(() => {
+    getShifts().then((data) => {
+      setShifts({ morning: data.morning || [], evening: data.evening || [], night: data.night || [] });
+      setLoading(false);
+    }).catch(() => setLoading(false));
+  }, []);
 
   const active = TABS.find((t) => t.id === tab);
   const currentData = shifts[tab];
@@ -32,19 +40,29 @@ export default function ShiftsPage() {
   const openAdd = () => { setEditId(null); setForm({ name: '', site: '', time: '', days: 'Sun-Thu', shift: tab }); setShowForm(true); };
   const openEdit = (s) => { setEditId(s.id); setForm({ name: s.name, site: s.site, time: s.time, days: s.days, shift: tab }); setShowForm(true); };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!form.name.trim() || !form.site.trim() || !form.time.trim()) { return; }
-    const shiftKey = form.shift;
+    const shiftData = { name: form.name, site: form.site, time: form.time, days: form.days, shift: form.shift };
     if (editId) {
-      setShifts((prev) => ({ ...prev, [shiftKey]: prev[shiftKey].map((s) => s.id === editId ? { ...s, name: form.name, site: form.site, time: form.time, days: form.days } : s) }));
+      await updateDocument('shifts', editId, shiftData);
+      setShifts((prev) => {
+        const updated = { ...prev };
+        for (const key of Object.keys(updated)) {
+          updated[key] = updated[key].map((s) => s.id === editId ? { ...s, ...shiftData } : s);
+        }
+        return updated;
+      });
     } else {
-      const newId = `S-${String(Object.values(shifts).flat().length + 1).padStart(3, '0')}`;
-      setShifts((prev) => ({ ...prev, [shiftKey]: [...prev[shiftKey], { id: newId, name: form.name, site: form.site, time: form.time, days: form.days }] }));
+      const newId = await addDocument('shifts', shiftData);
+      if (newId) {
+        setShifts((prev) => ({ ...prev, [form.shift]: [...prev[form.shift], { id: newId, ...shiftData }] }));
+      }
     }
     setShowForm(false);
   };
 
-  const handleDelete = (shiftKey, id) => {
+  const handleDelete = async (shiftKey, id) => {
+    await deleteDocument('shifts', id);
     setShifts((prev) => ({ ...prev, [shiftKey]: prev[shiftKey].filter((s) => s.id !== id) }));
   };
 
@@ -53,13 +71,14 @@ export default function ShiftsPage() {
     window.confirm('Auto-assign will distribute guards evenly across shifts. Continue?');
   };
 
+  const totalShifts = Object.values(shifts).flat().length;
   const inputCls = 'w-full rounded-xl border border-theme-muted bg-surface-muted/40 px-4 py-2.5 text-sm text-theme-primary placeholder:text-theme-muted focus:border-accent-500 focus:outline-none';
 
   return (
     <div className="space-y-6">
       <SEO title="Shift Management — Admin" noIndex />
       <div className="flex flex-wrap items-center justify-between gap-4">
-        <div><h1 className="font-sans text-2xl font-bold tracking-[-0.02em] text-theme-primary">Shift Management</h1><p className="mt-1 text-sm text-theme-muted">{Object.values(shifts).flat().length} shifts scheduled</p></div>
+        <div><h1 className="font-sans text-2xl font-bold tracking-[-0.02em] text-theme-primary">Shift Management</h1><p className="mt-1 text-sm text-theme-muted">{loading ? 'Loading...' : `${totalShifts} shifts scheduled`}</p></div>
         <div className="flex gap-2">
           <button onClick={handleAutoAssign} className="flex items-center gap-2 rounded-xl border border-theme-muted px-3 py-2 text-sm text-theme-secondary transition-all hover:border-accent-500/30"><RefreshCw className="h-4 w-4" /> Auto Assign</button>
           <button onClick={openAdd} className="flex items-center gap-2 rounded-xl bg-accent-500 px-4 py-2.5 text-sm font-medium text-white transition-all hover:bg-accent-400"><Plus className="h-4 w-4" /> Add Shift</button>
@@ -80,28 +99,34 @@ export default function ShiftsPage() {
         ))}
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {currentData.map((s) => (
-          <div key={s.id} className={`rounded-2xl border border-theme-muted bg-surface-raised p-5 transition-all hover:shadow-lg ${active.border} ${active.bg}`}>
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent-500/10 text-xs font-bold text-accent-400">{s.name.split(' ').map((n) => n[0]).join('')}</div>
-                <div><p className="text-sm font-medium text-theme-primary">{s.name}</p><p className="text-[10px] text-theme-muted">{s.id}</p></div>
+      {loading ? (
+        <div className="py-16 text-center"><div className="mx-auto h-8 w-8 animate-spin rounded-full border-2 border-accent-500 border-t-transparent" /><p className="mt-4 text-sm text-theme-muted">Loading shifts...</p></div>
+      ) : currentData.length === 0 ? (
+        <div className="py-16 text-center"><active.icon className={cn('mx-auto h-10 w-10', active.color)} /><p className="mt-3 text-sm text-theme-muted">{totalShifts === 0 ? 'No shifts scheduled yet. Click "Add Shift" to get started.' : 'No shifts in this category.'}</p></div>
+      ) : (
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {currentData.map((s) => (
+            <div key={s.id} className={`rounded-2xl border border-theme-muted bg-surface-raised p-5 transition-all hover:shadow-lg ${active.border} ${active.bg}`}>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent-500/10 text-xs font-bold text-accent-400">{s.name.split(' ').map((n) => n[0]).join('')}</div>
+                  <div><p className="text-sm font-medium text-theme-primary">{s.name}</p><p className="text-[10px] text-theme-muted">{s.id}</p></div>
+                </div>
+                <active.icon className={cn('h-5 w-5', active.color)} />
               </div>
-              <active.icon className={cn('h-5 w-5', active.color)} />
+              <div className="mt-4 space-y-2 rounded-xl border border-theme-muted bg-surface-muted/40 p-3">
+                <div className="flex justify-between text-xs"><span className="text-theme-muted">Site</span><span className="font-medium text-theme-primary">{s.site}</span></div>
+                <div className="flex justify-between text-xs"><span className="text-theme-muted">Time</span><span className="font-medium text-theme-primary">{s.time}</span></div>
+                <div className="flex justify-between text-xs"><span className="text-theme-muted">Days</span><span className="font-medium text-theme-primary">{s.days}</span></div>
+              </div>
+              <div className="mt-3 flex gap-1 border-t border-theme-muted pt-3">
+                <button onClick={() => openEdit(s)} className="flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-[10px] text-theme-muted transition-colors hover:bg-surface-overlay hover:text-accent-400"><Edit3 className="h-3 w-3" /> Edit</button>
+                <button onClick={() => handleDelete(tab, s.id)} className="ml-auto flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-[10px] text-theme-muted transition-colors hover:bg-danger-500/10 hover:text-danger-400"><Trash2 className="h-3 w-3" /> Delete</button>
+              </div>
             </div>
-            <div className="mt-4 space-y-2 rounded-xl border border-theme-muted bg-surface-muted/40 p-3">
-              <div className="flex justify-between text-xs"><span className="text-theme-muted">Site</span><span className="font-medium text-theme-primary">{s.site}</span></div>
-              <div className="flex justify-between text-xs"><span className="text-theme-muted">Time</span><span className="font-medium text-theme-primary">{s.time}</span></div>
-              <div className="flex justify-between text-xs"><span className="text-theme-muted">Days</span><span className="font-medium text-theme-primary">{s.days}</span></div>
-            </div>
-            <div className="mt-3 flex gap-1 border-t border-theme-muted pt-3">
-              <button onClick={() => openEdit(s)} className="flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-[10px] text-theme-muted transition-colors hover:bg-surface-overlay hover:text-accent-400"><Edit3 className="h-3 w-3" /> Edit</button>
-              <button onClick={() => handleDelete(tab, s.id)} className="ml-auto flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-[10px] text-theme-muted transition-colors hover:bg-danger-500/10 hover:text-danger-400"><Trash2 className="h-3 w-3" /> Delete</button>
-            </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
 
       {showForm && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center p-4" role="dialog" aria-modal="true">

@@ -1,23 +1,18 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Users, GraduationCap, Calendar, TrendingUp, X, Check, Edit3, Trash2, UserPlus, CalendarPlus } from 'lucide-react';
 import { SEO } from '@/components/SEO';
-
-const INITIAL_EMP = [
-  { id: 'E-001', name: 'Sarah Al Mahmood', dept: 'HR', position: 'HR Manager', joinDate: '2024-07-15', status: 'Active', leave: '5 days', performance: 'A' },
-  { id: 'E-002', name: 'Tariq Al Ansari', dept: 'Training', position: 'Training Coordinator', joinDate: '2024-08-01', status: 'Active', leave: '12 days', performance: 'A' },
-  { id: 'E-003', name: 'Layla Noor', dept: 'Recruitment', position: 'Recruiter', joinDate: '2024-09-10', status: 'Active', leave: '3 days', performance: 'B+' },
-  { id: 'E-004', name: 'Hamad Al Buainain', dept: 'Payroll', position: 'Payroll Officer', joinDate: '2024-10-01', status: 'Active', leave: '8 days', performance: 'A' },
-];
-
-const INITIAL_INT = [
-  { candidate: 'Nasser Al Dossari', position: 'Security Officer', date: '2026-07-30', time: '10:00 AM', status: 'Scheduled' },
-  { candidate: 'Mariam Al Khalifa', position: 'CCTV Operator', date: '2026-07-31', time: '02:00 PM', status: 'Scheduled' },
-  { candidate: 'Yusuf Ahmed', position: 'Patrol Driver', date: '2026-08-01', time: '11:00 AM', status: 'Confirmed' },
-];
+import { getCollection, addDocument, updateDocument, deleteDocument } from '@/firebase/services';
 
 export default function HRPage() {
-  const [employees, setEmployees] = useState(INITIAL_EMP);
-  const [interviews, setInterviews] = useState(INITIAL_INT);
+  const [employees, setEmployees] = useState([]);
+  const [interviews, setInterviews] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    Promise.all([getCollection('employees'), getCollection('interviews')])
+      .then(([emp, int]) => { setEmployees(emp); setInterviews(int); setLoading(false); })
+      .catch(() => setLoading(false));
+  }, []);
   const [showEmpForm, setShowEmpForm] = useState(false);
   const [showIntForm, setShowIntForm] = useState(false);
   const [editEmpId, setEditEmpId] = useState(null);
@@ -27,20 +22,30 @@ export default function HRPage() {
   const openEditEmp = (e) => { setEditEmpId(e.id); setEmpForm({ name: e.name, dept: e.dept, position: e.position, joinDate: e.joinDate, status: e.status, leave: e.leave, performance: e.performance }); setShowEmpForm(true); };
   const [intForm, setIntForm] = useState({ candidate: '', position: '', date: '', time: '', status: 'Scheduled' });
 
-  const handleSaveEmp = () => {
+  const handleSaveEmp = async () => {
     if (!empForm.name.trim()) { return; }
-    if (editEmpId) { setEmployees((prev) => prev.map((e) => e.id === editEmpId ? { ...e, ...empForm } : e)); }
-    else { const newId = `E-${String(employees.length + 1).padStart(3, '0')}`; setEmployees((prev) => [...prev, { id: newId, ...empForm }]); }
+    if (editEmpId) {
+      await updateDocument('employees', editEmpId, empForm);
+      setEmployees((prev) => prev.map((e) => e.id === editEmpId ? { ...e, ...empForm } : e));
+    } else {
+      const newId = await addDocument('employees', empForm);
+      if (newId) { setEmployees((prev) => [...prev, { id: newId, ...empForm }]); }
+    }
     setShowEmpForm(false);
   };
-  const handleDeleteEmp = (id) => { setEmployees((prev) => prev.filter((e) => e.id !== id)); };
+  const handleDeleteEmp = async (id) => { await deleteDocument('employees', id); setEmployees((prev) => prev.filter((e) => e.id !== id)); };
 
-  const handleAddInt = () => {
+  const handleAddInt = async () => {
     if (!intForm.candidate.trim()) { return; }
-    setInterviews((prev) => [...prev, intForm]);
+    const newId = await addDocument('interviews', intForm);
+    if (newId) { setInterviews((prev) => [...prev, { id: newId, ...intForm }]); }
     setIntForm({ candidate: '', position: '', date: '', time: '', status: 'Scheduled' }); setShowIntForm(false);
   };
-  const handleDeleteInt = (idx) => { setInterviews((prev) => prev.filter((_, i) => i !== idx)); };
+  const handleDeleteInt = async (idx) => {
+    const item = interviews[idx];
+    if (item?.id) { await deleteDocument('interviews', item.id); }
+    setInterviews((prev) => prev.filter((_, i) => i !== idx));
+  };
 
   const inputCls = 'w-full rounded-xl border border-theme-muted bg-surface-muted/40 px-4 py-2.5 text-sm text-theme-primary placeholder:text-theme-muted focus:border-accent-500 focus:outline-none';
 
@@ -57,10 +62,10 @@ export default function HRPage() {
 
       <div className="grid gap-4 sm:grid-cols-4">
         {[
-          { icon: Users, label: 'Total Staff', value: '512', color: 'text-blue-400', bg: 'bg-blue-500/10' },
-          { icon: GraduationCap, label: 'In Training', value: '28', color: 'text-green-400', bg: 'bg-green-500/10' },
-          { icon: Calendar, label: 'On Leave Today', value: '17', color: 'text-amber-400', bg: 'bg-amber-500/10' },
-          { icon: TrendingUp, label: 'Avg Performance', value: 'B+', color: 'text-violet-400', bg: 'bg-violet-500/10' },
+          { icon: Users, label: 'Admin Staff', value: employees.length, color: 'text-blue-400', bg: 'bg-blue-500/10' },
+          { icon: GraduationCap, label: 'In Training', value: employees.filter((e) => e.status === 'Training').length, color: 'text-green-400', bg: 'bg-green-500/10' },
+          { icon: Calendar, label: 'On Leave', value: employees.filter((e) => e.status === 'On Leave').length, color: 'text-amber-400', bg: 'bg-amber-500/10' },
+          { icon: TrendingUp, label: 'Upcoming Interviews', value: interviews.length, color: 'text-violet-400', bg: 'bg-violet-500/10' },
         ].map((s) => (
           <div key={s.label} className="rounded-2xl border border-theme-muted bg-surface-raised p-4 text-center"><div className={`mx-auto flex h-10 w-10 items-center justify-center rounded-xl ${s.bg}`}><s.icon className={`h-5 w-5 ${s.color}`} /></div><p className={`mt-2 font-sans text-2xl font-bold ${s.color}`}>{s.value}</p><p className="text-[10px] text-theme-muted uppercase tracking-wider">{s.label}</p></div>
         ))}

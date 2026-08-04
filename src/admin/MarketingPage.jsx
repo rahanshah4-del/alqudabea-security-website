@@ -1,39 +1,41 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { TrendingUp, Users, Target, MessageCircle, Mail, Phone, Plus, BarChart3, X, Check, Trash2 } from 'lucide-react';
 import { SEO } from '@/components/SEO';
+import { MarketingAPI } from '@/firebase/services';
 
 const STAGES = ['New Lead', 'Contacted', 'Qualified', 'Proposal Sent', 'Negotiation', 'Won', 'Lost'];
 
 export default function MarketingPage() {
-  const [leads, setLeads] = useState([
-    { id: 'L-001', company: 'Gulf Air', contact: 'Khalid Al Ansari', phone: '+973 1733 7777', email: 'khalid@gulfair.com', source: 'Website', stage: 'Proposal Sent', value: 'BD 52,000', probability: '70%' },
-    { id: 'L-002', company: 'BAPCO', contact: 'Nasser Al Dossari', phone: '+973 1775 5555', email: 'nasser@bapco.bh', source: 'Referral', stage: 'Negotiation', value: 'BD 85,000', probability: '50%' },
-    { id: 'L-003', company: 'Bahrain Mall', contact: 'Mariam Al Khalifa', phone: '+973 1722 3333', email: 'mariam@bmall.bh', source: 'LinkedIn', stage: 'Qualified', value: 'BD 22,000', probability: '40%' },
-    { id: 'L-004', company: 'AMH Hospital', contact: 'Dr. Ali Redha', phone: '+973 1725 8888', email: 'ali@amh.bh', source: 'WhatsApp', stage: 'Contacted', value: 'BD 38,000', probability: '30%' },
-    { id: 'L-005', company: 'Al Moayyed Tower', contact: 'Yusuf Ahmed', phone: '+973 1711 2222', email: 'yusuf@almoayyed.bh', source: 'Website', stage: 'New Lead', value: 'BD 15,000', probability: '20%' },
-  ]);
+  const [leads, setLeads] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    MarketingAPI.getAll().then((data) => { setLeads(data); setLoading(false); }).catch(() => setLoading(false));
+  }, []);
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState({ company: '', contact: '', phone: '', email: '', source: 'Website', stage: 'New Lead', value: '', probability: '20%' });
   const [tab, setTab] = useState('pipeline');
 
   const pipeline = STAGES.map((s) => ({ stage: s, count: leads.filter((l) => l.stage === s).length, value: leads.filter((l) => l.stage === s).reduce((sum, l) => sum + parseInt(l.value.replace(/[^0-9]/g, '')), 0) }));
-  const totalValue = leads.reduce((sum, l) => sum + parseInt(l.value.replace(/[^0-9]/g, '')), 0);
+  const totalValue = leads.reduce((sum, l) => sum + parseInt((l.value || '0').replace(/[^0-9]/g, '')), 0);
   const avgDeal = leads.length > 0 ? Math.round(totalValue / leads.length) : 0;
+  const wonCount = leads.filter((l) => l.stage === 'Won').length;
+  const conversionRate = leads.length > 0 ? `${Math.round((wonCount / leads.length) * 100)}%` : '0%';
 
-  const handleAdd = () => {
+  const handleAdd = async () => {
     if (!form.company.trim() || !form.value.trim()) { return; }
-    const newId = `L-${String(leads.length + 1).padStart(3, '0')}`;
-    setLeads((prev) => [...prev, { id: newId, ...form }]);
+    const newId = await MarketingAPI.add(form);
+    if (newId) { setLeads((prev) => [...prev, { id: newId, ...form }]); }
     setForm({ company: '', contact: '', phone: '', email: '', source: 'Website', stage: 'New Lead', value: '', probability: '20%' }); setShowForm(false);
   };
-  const handleDelete = (id) => { setLeads((prev) => prev.filter((l) => l.id !== id)); };
-  const handleStage = (id) => {
-    setLeads((prev) => prev.map((l) => {
-      if (l.id !== id) { return l; }
-      const idx = STAGES.indexOf(l.stage);
-      const next = idx < STAGES.length - 1 ? STAGES[idx + 1] : STAGES[0];
-      return { ...l, stage: next, probability: next === 'Won' ? '100%' : next === 'Lost' ? '0%' : l.probability };
-    }));
+  const handleDelete = async (id) => { await MarketingAPI.delete(id); setLeads((prev) => prev.filter((l) => l.id !== id)); };
+  const handleStage = async (id) => {
+    const lead = leads.find((l) => l.id === id);
+    const idx = STAGES.indexOf(lead.stage);
+    const next = idx < STAGES.length - 1 ? STAGES[idx + 1] : STAGES[0];
+    const newProb = next === 'Won' ? '100%' : next === 'Lost' ? '0%' : lead.probability;
+    await MarketingAPI.update(id, { stage: next, probability: newProb });
+    setLeads((prev) => prev.map((l) => l.id === id ? { ...l, stage: next, probability: newProb } : l));
   };
 
   const inputCls = 'w-full rounded-xl border border-theme-muted bg-surface-muted/40 px-4 py-2.5 text-sm text-theme-primary placeholder:text-theme-muted focus:border-accent-500 focus:outline-none';
@@ -50,7 +52,7 @@ export default function MarketingPage() {
         {[
           { icon: Users, label: 'Total Leads', value: leads.length, color: 'text-blue-400', bg: 'bg-blue-500/10' },
           { icon: Target, label: 'Pipeline Value', value: `BD ${totalValue.toLocaleString()}`, color: 'text-green-400', bg: 'bg-green-500/10' },
-          { icon: TrendingUp, label: 'Conversion Rate', value: '34%', color: 'text-violet-400', bg: 'bg-violet-500/10' },
+          { icon: TrendingUp, label: 'Conversion Rate', value: conversionRate, color: 'text-violet-400', bg: 'bg-violet-500/10' },
           { icon: BarChart3, label: 'Avg Deal', value: `BD ${avgDeal.toLocaleString()}`, color: 'text-amber-400', bg: 'bg-amber-500/10' },
         ].map((s) => (
           <div key={s.label} className="rounded-2xl border border-theme-muted bg-surface-raised p-4 text-center"><div className={`mx-auto flex h-10 w-10 items-center justify-center rounded-xl ${s.bg}`}><s.icon className={`h-5 w-5 ${s.color}`} /></div><p className={`mt-2 font-sans text-2xl font-bold ${s.color}`}>{s.value}</p><p className="text-[10px] text-theme-muted uppercase tracking-wider">{s.label}</p></div>
@@ -108,8 +110,8 @@ export default function MarketingPage() {
       {tab === 'roi' && (
         <div className="grid gap-4 sm:grid-cols-3">
           {[
-            { label: 'Campaign ROI', value: '320%', up: true, color: 'text-green-400' },
-            { label: 'Cost per Lead', value: 'BD 18', up: false, color: 'text-amber-400' },
+            { label: 'Campaign ROI', value: leads.length > 0 ? `${Math.round(totalValue / (leads.length * 100))}x` : '—', up: true, color: 'text-green-400' },
+            { label: 'Cost per Lead', value: avgDeal > 0 ? `BD ${Math.round(avgDeal * 0.1).toLocaleString()}` : '—', up: false, color: 'text-amber-400' },
             { label: 'Revenue from Marketing', value: `BD ${Math.round(totalValue * 0.6).toLocaleString()}`, up: true, color: 'text-blue-400' },
           ].map((r) => (
             <div key={r.label} className="rounded-2xl border border-theme-muted bg-surface-raised p-5 text-center">

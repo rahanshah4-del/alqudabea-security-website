@@ -1,23 +1,20 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { DollarSign, TrendingUp, TrendingDown, FileText, Download, Plus, ArrowUp, ArrowDown, X, Check, Trash2 } from 'lucide-react';
 import { SEO } from '@/components/SEO';
+import { getCollection, addDocument, updateDocument, deleteDocument } from '@/firebase/services';
 
 const statCls = (s) => s === 'Paid' ? 'bg-green-500/10 text-green-400' : s === 'Pending' ? 'bg-blue-500/10 text-blue-400' : 'bg-danger-500/10 text-danger-400';
 
 export default function FinancePage() {
-  const [invoices, setInvoices] = useState([
-    { id: 'INV-001', client: 'Bahrain Financial Harbour', amount: 'BD 45,000', status: 'Paid', date: '2026-07-01' },
-    { id: 'INV-002', client: 'Al Salam Bank', amount: 'BD 30,000', status: 'Paid', date: '2026-07-05' },
-    { id: 'INV-003', client: 'The Ritz-Carlton', amount: 'BD 32,000', status: 'Pending', date: '2026-07-15' },
-    { id: 'INV-004', client: 'Bahrain National Hospital', amount: 'BD 28,500', status: 'Pending', date: '2026-07-20' },
-    { id: 'INV-005', client: 'Diyar Al Muharraq', amount: 'BD 18,000', status: 'Overdue', date: '2026-06-15' },
-    { id: 'INV-006', client: 'British School', amount: 'BD 15,000', status: 'Paid', date: '2026-07-10' },
-  ]);
-  const [quotes, setQuotes] = useState([
-    { id: 'Q-001', client: 'Gulf Air', amount: 'BD 52,000', status: 'Sent', date: '2026-07-25' },
-    { id: 'Q-002', client: 'BAPCO', amount: 'BD 85,000', status: 'Draft', date: '2026-07-26' },
-    { id: 'Q-003', client: 'Bahrain Mall', amount: 'BD 22,000', status: 'Sent', date: '2026-07-27' },
-  ]);
+  const [invoices, setInvoices] = useState([]);
+  const [quotes, setQuotes] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    Promise.all([getCollection('invoices'), getCollection('quotes')])
+      .then(([inv, qts]) => { setInvoices(inv); setQuotes(qts); setLoading(false); })
+      .catch(() => setLoading(false));
+  }, []);
   const [showInvForm, setShowInvForm] = useState(false);
   const [showQuoteForm, setShowQuoteForm] = useState(false);
   const [invForm, setInvForm] = useState({ client: '', amount: '', status: 'Pending' });
@@ -27,22 +24,25 @@ export default function FinancePage() {
   const pending = invoices.filter((i) => i.status === 'Pending').reduce((s, i) => s + parseInt(i.amount.replace(/[^0-9]/g, '')), 0);
   const overdue = invoices.filter((i) => i.status === 'Overdue').reduce((s, i) => s + parseInt(i.amount.replace(/[^0-9]/g, '')), 0);
 
-  const handleAddInv = () => {
+  const handleAddInv = async () => {
     if (!invForm.client.trim() || !invForm.amount.trim()) { return; }
-    const newId = `INV-${String(invoices.length + 1).padStart(3, '0')}`;
-    setInvoices((prev) => [...prev, { id: newId, ...invForm, date: new Date().toISOString().split('T')[0] }]);
+    const newId = await addDocument('invoices', { ...invForm, date: new Date().toISOString().split('T')[0] });
+    if (newId) { setInvoices((prev) => [...prev, { id: newId, ...invForm, date: new Date().toISOString().split('T')[0] }]); }
     setInvForm({ client: '', amount: '', status: 'Pending' }); setShowInvForm(false);
   };
-  const handleAddQuote = () => {
+  const handleAddQuote = async () => {
     if (!quoteForm.client.trim() || !quoteForm.amount.trim()) { return; }
-    const newId = `Q-${String(quotes.length + 1).padStart(3, '0')}`;
-    setQuotes((prev) => [...prev, { id: newId, ...quoteForm, date: new Date().toISOString().split('T')[0] }]);
+    const newId = await addDocument('quotes', { ...quoteForm, date: new Date().toISOString().split('T')[0] });
+    if (newId) { setQuotes((prev) => [...prev, { id: newId, ...quoteForm, date: new Date().toISOString().split('T')[0] }]); }
     setQuoteForm({ client: '', amount: '', status: 'Draft' }); setShowQuoteForm(false);
   };
-  const handleDeleteInv = (id) => { setInvoices((prev) => prev.filter((i) => i.id !== id)); };
-  const handleDeleteQuote = (id) => { setQuotes((prev) => prev.filter((q) => q.id !== id)); };
-  const handleToggleInv = (id) => {
-    setInvoices((prev) => prev.map((i) => i.id === id ? { ...i, status: i.status === 'Paid' ? 'Pending' : i.status === 'Pending' ? 'Overdue' : 'Paid' } : i));
+  const handleDeleteInv = async (id) => { await deleteDocument('invoices', id); setInvoices((prev) => prev.filter((i) => i.id !== id)); };
+  const handleDeleteQuote = async (id) => { await deleteDocument('quotes', id); setQuotes((prev) => prev.filter((q) => q.id !== id)); };
+  const handleToggleInv = async (id) => {
+    const inv = invoices.find((i) => i.id === id);
+    const newStatus = inv.status === 'Paid' ? 'Pending' : inv.status === 'Pending' ? 'Overdue' : 'Paid';
+    await updateDocument('invoices', id, { status: newStatus });
+    setInvoices((prev) => prev.map((i) => i.id === id ? { ...i, status: newStatus } : i));
   };
 
   const inputCls = 'w-full rounded-xl border border-theme-muted bg-surface-muted/40 px-4 py-2.5 text-sm text-theme-primary placeholder:text-theme-muted focus:border-accent-500 focus:outline-none';
@@ -64,7 +64,7 @@ export default function FinancePage() {
           { icon: DollarSign, label: 'Monthly Revenue', value: `BD ${(paid + pending).toLocaleString()}`, change: '+8.2%', up: true, color: 'text-green-400', bg: 'bg-green-500/10' },
           { icon: TrendingUp, label: 'Paid', value: `BD ${paid.toLocaleString()}`, change: '+12%', up: true, color: 'text-blue-400', bg: 'bg-blue-500/10' },
           { icon: TrendingDown, label: 'Pending + Overdue', value: `BD ${(pending + overdue).toLocaleString()}`, change: '-3.1%', up: false, color: 'text-amber-400', bg: 'bg-amber-500/10' },
-          { icon: FileText, label: 'Expenses', value: 'BD 48,200', change: '+5.7%', up: false, color: 'text-danger-400', bg: 'bg-danger-500/10' },
+          { icon: FileText, label: 'Expenses', value: `BD ${(paid + pending + overdue).toLocaleString()}`, change: '—', up: false, color: 'text-danger-400', bg: 'bg-danger-500/10' },
         ].map((s) => (
           <div key={s.label} className="rounded-2xl border border-theme-muted bg-surface-raised p-5">
             <div className="flex items-center justify-between"><div className={`flex h-10 w-10 items-center justify-center rounded-xl ${s.bg}`}><s.icon className={`h-5 w-5 ${s.color}`} /></div><span className={`flex items-center gap-1 text-xs font-bold ${s.up ? 'text-green-400' : 'text-danger-400'}`}>{s.up ? <ArrowUp className="h-3 w-3" /> : <ArrowDown className="h-3 w-3" />}{s.change}</span></div>

@@ -1,29 +1,50 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { AlertTriangle, CheckCircle2, Users, Clock, X, Plus, Check, Trash2 } from 'lucide-react';
 import { SEO } from '@/components/SEO';
-import { getNotifications } from '@/admin/AdminData';
+import { NotificationsAPI } from '@/firebase/services';
 
 const iconMap = { alert: { icon: AlertTriangle, color: 'text-danger-400', bg: 'bg-danger-500/10' }, success: { icon: CheckCircle2, color: 'text-green-400', bg: 'bg-green-500/10' }, info: { icon: Users, color: 'text-blue-400', bg: 'bg-blue-500/10' }, warning: { icon: Clock, color: 'text-amber-400', bg: 'bg-amber-500/10' } };
 
 export default function NotificationsPage() {
-  const [notifs, setNotifs] = useState(() => getNotifications());
+  const [notifs, setNotifs] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('all');
   const [showForm, setShowForm] = useState(false);
   const [newNotif, setNewNotif] = useState({ title: '', desc: '', type: 'info' });
 
+  useEffect(() => {
+    NotificationsAPI.getAll().then((data) => { setNotifs(data); setLoading(false); }).catch(() => setLoading(false));
+  }, []);
+
   const filtered = filter === 'all' ? notifs : notifs.filter((n) => n.type === filter);
   const unread = notifs.filter((n) => n.unread).length;
 
-  const markAllRead = () => setNotifs((prev) => prev.map((n) => ({ ...n, unread: false })));
-  const markRead = (id) => setNotifs((prev) => prev.map((x) => x.id === id ? { ...x, unread: false } : x));
-  // eslint-disable-next-line no-alert
-  const clearAll = () => { if (window.confirm('Clear all notifications?')) { setNotifs([]); } };
-  const deleteNotif = (id) => setNotifs((prev) => prev.filter((n) => n.id !== id));
+  const markAllRead = async () => {
+    await Promise.all(notifs.filter((n) => n.unread).map((n) => NotificationsAPI.markRead(n.id)));
+    setNotifs((prev) => prev.map((n) => ({ ...n, unread: false })));
+  };
+  const markRead = async (id) => {
+    await NotificationsAPI.markRead(id);
+    setNotifs((prev) => prev.map((x) => x.id === id ? { ...x, unread: false } : x));
+  };
+  const clearAll = async () => {
+    // eslint-disable-next-line no-alert
+    if (window.confirm('Clear all notifications?')) {
+      await Promise.all(notifs.map((n) => NotificationsAPI.delete ? NotificationsAPI.delete(n.id) : null));
+      setNotifs([]);
+    }
+  };
+  const deleteNotif = async (id) => {
+    try { await NotificationsAPI.delete?.(id); } catch { /* may not exist */ }
+    setNotifs((prev) => prev.filter((n) => n.id !== id));
+  };
 
-  const handleAdd = () => {
+  const handleAdd = async () => {
     if (!newNotif.title.trim()) { return; }
-    const newId = Date.now();
-    setNotifs((prev) => [{ id: newId, ...newNotif, time: 'Just now', unread: true }, ...prev]);
+    const newId = await NotificationsAPI.add({ title: newNotif.title, desc: newNotif.desc, type: newNotif.type, user: 'Admin' });
+    if (newId) {
+      setNotifs((prev) => [{ id: newId, ...newNotif, time: 'Just now', unread: true }, ...prev]);
+    }
     setNewNotif({ title: '', desc: '', type: 'info' }); setShowForm(false);
   };
 
@@ -33,7 +54,7 @@ export default function NotificationsPage() {
     <div className="space-y-6">
       <SEO title="Notifications — Admin" noIndex />
       <div className="flex flex-wrap items-center justify-between gap-4">
-        <div><h1 className="font-sans text-2xl font-bold tracking-[-0.02em] text-theme-primary">Notification Center</h1><p className="mt-1 text-sm text-theme-muted">{notifs.length} total · {unread} unread</p></div>
+        <div><h1 className="font-sans text-2xl font-bold tracking-[-0.02em] text-theme-primary">Notification Center</h1><p className="mt-1 text-sm text-theme-muted">{loading ? 'Loading...' : `${notifs.length} total · ${unread} unread`}</p></div>
         <div className="flex gap-2">
           <select value={filter} onChange={(e) => setFilter(e.target.value)} className="rounded-xl border border-theme-muted bg-surface-raised px-3 py-2 text-xs text-theme-secondary focus:border-accent-500 focus:outline-none">
             <option value="all">All</option><option value="alert">Alerts</option><option value="warning">Warnings</option><option value="info">Info</option><option value="success">Success</option>
@@ -44,20 +65,25 @@ export default function NotificationsPage() {
         </div>
       </div>
 
-      <div className="space-y-2">
-        {filtered.map((n) => {
-          const ic = iconMap[n.type] || iconMap.info;
-          const Nic = ic.icon;
-          return (
-            <div key={n.id} className={`flex items-start gap-4 rounded-2xl border p-4 transition-all hover:shadow-lg ${n.unread ? 'border-accent-500/20 bg-accent-500/[0.03]' : 'border-theme-muted bg-surface-raised'}`}>
-              <button onClick={() => markRead(n.id)} className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${ic.bg}`}><Nic className={`h-5 w-5 ${ic.color}`} /></button>
-              <div className="flex-1 min-w-0"><p className="text-sm font-medium text-theme-primary">{n.title} {n.unread && <span className="ml-2 inline-block h-2 w-2 rounded-full bg-accent-500" />}</p><p className="mt-0.5 text-xs text-theme-muted">{n.desc}</p></div>
-              <div className="flex items-center gap-1 shrink-0"><span className="text-[10px] text-theme-muted">{n.time}</span><button onClick={() => deleteNotif(n.id)} className="rounded-lg p-1 text-theme-muted hover:bg-danger-500/10 hover:text-danger-400"><X className="h-3.5 w-3.5" /></button></div>
-            </div>
-          );
-        })}
-        {filtered.length === 0 && <div className="py-16 text-center"><CheckCircle2 className="mx-auto h-10 w-10 text-theme-muted" /><p className="mt-3 text-sm text-theme-muted">No notifications</p></div>}
-      </div>
+      {loading ? (
+        <div className="py-16 text-center"><div className="mx-auto h-8 w-8 animate-spin rounded-full border-2 border-accent-500 border-t-transparent" /><p className="mt-4 text-sm text-theme-muted">Loading notifications...</p></div>
+      ) : filtered.length === 0 ? (
+        <div className="py-16 text-center"><CheckCircle2 className="mx-auto h-10 w-10 text-theme-muted" /><p className="mt-3 text-sm text-theme-muted">No notifications</p></div>
+      ) : (
+        <div className="space-y-2">
+          {filtered.map((n) => {
+            const ic = iconMap[n.type] || iconMap.info;
+            const Nic = ic.icon;
+            return (
+              <div key={n.id} className={`flex items-start gap-4 rounded-2xl border p-4 transition-all hover:shadow-lg ${n.unread ? 'border-accent-500/20 bg-accent-500/[0.03]' : 'border-theme-muted bg-surface-raised'}`}>
+                <button onClick={() => markRead(n.id)} className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${ic.bg}`}><Nic className={`h-5 w-5 ${ic.color}`} /></button>
+                <div className="flex-1 min-w-0"><p className="text-sm font-medium text-theme-primary">{n.title} {n.unread && <span className="ml-2 inline-block h-2 w-2 rounded-full bg-accent-500" />}</p><p className="mt-0.5 text-xs text-theme-muted">{n.desc}</p></div>
+                <div className="flex items-center gap-1 shrink-0"><span className="text-[10px] text-theme-muted">{typeof n.time === 'string' ? n.time : (n.createdAt?.toDate ? n.createdAt.toDate().toLocaleTimeString() : '—')}</span><button onClick={() => deleteNotif(n.id)} className="rounded-lg p-1 text-theme-muted hover:bg-danger-500/10 hover:text-danger-400"><X className="h-3.5 w-3.5" /></button></div>
+              </div>
+            );
+          })}
+        </div>
+      )}
 
       {showForm && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center p-4" role="dialog" aria-modal="true">

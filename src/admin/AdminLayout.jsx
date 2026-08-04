@@ -29,13 +29,26 @@ const NAV_ITEMS = [
 ];
 
 export function AdminLayout() {
-  const { user, logout } = useAuth();
+  const { user, initializing, logout } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
   const [showLogout, setShowLogout] = useState(false);
   const [userMenu, setUserMenu] = useState(false);
   const location = useLocation();
 
+  // Show loading skeleton while Firebase checks auth
+  if (initializing) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-surface-root">
+        <div className="flex flex-col items-center gap-4">
+          <div className="h-8 w-8 animate-spin rounded-full border-2 border-accent-500 border-t-transparent" />
+          <p className="text-sm text-theme-muted">Verifying session...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Redirect to login only AFTER auth check is complete and no user
   if (!user) { return <Navigate to="/login" replace />; }
 
   const handleLogout = () => { logout(); setShowLogout(false); };
