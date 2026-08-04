@@ -1,119 +1,119 @@
-import { useRef } from 'react';
+import { lazy, Suspense } from 'react';
 import { Link } from 'react-router';
-import { motion, useMotionTemplate, useMotionValue, useSpring } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { ArrowRight, ChevronDown, Shield } from 'lucide-react';
 import { Container } from '@/components/Container';
 import { Button } from '@/components/Button';
 import { HERO } from '@/data/home';
 import { APPLE_EASE } from '@/hooks/useScrollReveal';
 
+// Lazy-load Three.js globe — never blocks initial render
+const GlobeBackground = lazy(() => import('@/components/GlobeBackground'));
+
 /**
- * Premium full-viewport hero.
+ * Apple-Style Premium Hero.
  *
- * Apple-inspired minimalism: dark background with an animated gradient
- * orb tracked to mouse position, procedural noise grain, precise typography,
- * and exactly two CTAs. The scroll indicator invites exploration.
+ * Clean light background, ultra-subtle 3D globe behind the heading,
+ * crisp typography with precise color grading, generous whitespace.
+ * Enterprise security brand positioning — Fortune 500 ready.
  */
 export function HeroSection() {
-  const containerRef = useRef(null);
-
-  // ── Mouse-tracking gradient orb ──────────────────
-  const mouseX = useMotionValue(0.5);
-  const mouseY = useMotionValue(0.5);
-  const springX = useSpring(mouseX, { stiffness: 50, damping: 30 });
-  const springY = useSpring(mouseY, { stiffness: 50, damping: 30 });
-  const orbPosition = useMotionTemplate`${springX.get() * 100}% ${springY.get() * 100}%`;
-
-  function handleMouseMove(e) {
-    if (!containerRef.current) {
-      return;
-    }
-    const rect = containerRef.current.getBoundingClientRect();
-    mouseX.set((e.clientX - rect.left) / rect.width);
-    mouseY.set((e.clientY - rect.top) / rect.height);
-  }
-
   return (
     <section
-      ref={containerRef}
-      onMouseMove={handleMouseMove}
       className="relative flex min-h-[100svh] items-center justify-center overflow-hidden"
       aria-labelledby="hero-heading"
     >
-      {/* ── Background Layers ──────────────────────────── */}
-      <div className="bg-surface-root pointer-events-none absolute inset-0" aria-hidden="true" />
-
-      {/* Animated gradient orb — follows cursor subtly */}
-      <motion.div
-        className="pointer-events-none absolute inset-0 opacity-40"
-        style={{
-          background: useMotionTemplate`radial-gradient(ellipse 50% 50% at ${orbPosition}, oklch(0.55 0.18 255 / 0.18), transparent 60%)`,
-        }}
-        aria-hidden="true"
-      />
-
-      {/* Secondary static glow for depth */}
+      {/* ── Background ──────────────────────────────────── */}
       <div
         className="pointer-events-none absolute inset-0"
         style={{
-          background:
-            'radial-gradient(ellipse 80% 60% at 50% -10%, oklch(0.55 0.18 255 / 0.06), transparent)',
+          background: `linear-gradient(180deg, #FFFFFF 0%, #F8FBFF 45%, #FFFFFF 100%)`,
         }}
         aria-hidden="true"
       />
 
-      {/* Fine grain texture */}
+      {/* ── 3D Globe Layer ──────────────────────────────── */}
       <div
-        className="pointer-events-none absolute inset-0 opacity-[0.025]"
-        style={{
-          backgroundImage:
-            "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
-          backgroundRepeat: 'repeat',
-          backgroundSize: '256px 256px',
-        }}
+        className="pointer-events-none absolute inset-0 flex items-center justify-center overflow-hidden select-none"
         aria-hidden="true"
-      />
+        style={{ zIndex: 1 }}
+      >
+        {/* Soft radial glow behind globe */}
+        <div
+          className="absolute rounded-full blur-[80px]"
+          style={{
+            width: 'min(1100px, 100vw)',
+            height: 'min(1100px, 100vw)',
+            background: 'radial-gradient(circle, rgba(10,132,255,0.10) 0%, rgba(58,190,255,0.05) 30%, rgba(10,132,255,0.02) 55%, transparent 70%)',
+          }}
+        />
+
+        {/* Globe canvas */}
+        <div
+          className="absolute flex items-center justify-center"
+          style={{
+            width: 'clamp(340px, 88vw, 820px)',
+            height: 'clamp(340px, 88vw, 820px)',
+            maxWidth: '100vw',
+            maxHeight: '100vh',
+          }}
+        >
+          <Suspense fallback={null}>
+            <GlobeBackground />
+          </Suspense>
+        </div>
+      </div>
 
       {/* ── Content ──────────────────────────────────────── */}
       <Container size="small" className="relative z-10">
         <div className="flex flex-col items-center text-center">
-          {/* Badge */}
+          {/* Bahrain Badge */}
           <motion.div
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, ease: APPLE_EASE }}
+            transition={{ duration: 0.6, ease: APPLE_EASE }}
           >
-            <span className="inline-flex items-center gap-2 rounded-full border border-white/[0.08] bg-white/[0.03] px-4 py-1.5 backdrop-blur-sm">
-              <Shield className="text-accent-500 h-3.5 w-3.5" aria-hidden="true" />
-              <span className="font-mono text-[0.6875rem] font-medium tracking-[0.15em] text-neutral-400 uppercase">
+            <span className="inline-flex items-center gap-2 rounded-full border border-black/8 bg-black/[0.02] px-4 py-1.5">
+              <Shield className="h-3.5 w-3.5 text-[#0A84FF]" aria-hidden="true" />
+              <span className="font-sans text-[0.6875rem] font-medium tracking-[0.15em] text-neutral-500 uppercase">
                 {HERO.badge}
               </span>
             </span>
           </motion.div>
 
-          {/* Heading */}
+          {/* H1 — Crisp Apple-style typography */}
           <motion.h1
             id="hero-heading"
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1, ease: APPLE_EASE }}
-            className="mt-8 max-w-5xl font-sans text-[2.75rem] leading-[1.08] font-bold tracking-[-0.025em] sm:text-6xl lg:text-7xl xl:text-8xl"
+            transition={{ duration: 0.7, delay: 0.1, ease: APPLE_EASE }}
+            className="mt-10 sm:mt-12 max-w-5xl font-sans font-black tracking-[-0.04em] leading-[0.9] antialiased"
+            style={{
+              fontSize: 'clamp(2.5rem, 7vw, 7rem)',
+              WebkitFontSmoothing: 'antialiased',
+              MozOsxFontSmoothing: 'grayscale',
+            }}
           >
-            <span className="text-gradient">
+            <span style={{ color: '#0A84FF' }}>
               {HERO.heading.line1}
             </span>
             <br />
-            <span className="bg-gradient-to-r from-neutral-200 to-neutral-400 bg-clip-text text-transparent">
-              {HERO.heading.line2}
+            <span style={{ color: '#111111' }}>
+              SECURITY
+            </span>
+            <br />
+            <span style={{ color: '#111111' }}>
+              SERVICES W.L.L.
             </span>
           </motion.h1>
 
-          {/* Subheading */}
+          {/* Description */}
           <motion.p
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.25, ease: APPLE_EASE }}
-            className="mt-6 max-w-2xl text-base leading-relaxed text-neutral-500 sm:text-lg"
+            transition={{ duration: 0.7, delay: 0.3, ease: APPLE_EASE }}
+            className="mt-8 sm:mt-10 max-w-2xl font-sans text-base sm:text-lg leading-relaxed text-neutral-500 antialiased"
+            style={{ WebkitFontSmoothing: 'antialiased' }}
           >
             {HERO.subheading}
           </motion.p>
@@ -122,8 +122,8 @@ export function HeroSection() {
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.4, ease: APPLE_EASE }}
-            className="mt-10 flex flex-wrap items-center justify-center gap-4"
+            transition={{ duration: 0.7, delay: 0.5, ease: APPLE_EASE }}
+            className="mt-10 sm:mt-12 flex flex-wrap items-center justify-center gap-4"
           >
             <Button as={Link} to={HERO.cta.primary.href} size="lg">
               {HERO.cta.primary.label}
@@ -140,11 +140,11 @@ export function HeroSection() {
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 0.6, delay: 1.2 }}
+        transition={{ duration: 0.6, delay: 1.3 }}
         className="absolute bottom-8 left-1/2 -translate-x-1/2"
         aria-hidden="true"
       >
-        <ChevronDown className="h-6 w-6 animate-bounce text-neutral-700" />
+        <ChevronDown className="h-5 w-5 animate-bounce text-neutral-300" />
       </motion.div>
     </section>
   );

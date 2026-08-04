@@ -2,9 +2,8 @@ import { useState, useEffect } from 'react';
 import { Search, Download, Printer, X, Trash2, Edit3, Check, UserPlus, Shield, MapPin, Building2, ArrowRightLeft } from 'lucide-react';
 import { SEO } from '@/components/SEO';
 import { cn } from '@/utils/cn';
-import { GuardsAPI } from '@/firebase/services';
-import { getGuards } from '@/admin/AdminData';
-import { getCollection, updateDocument } from '@/firebase/services';
+import { GuardsAPI, SitesAPI } from '@/firebase/services';
+import { updateDocument } from '@/firebase/services';
 
 const DEPTS = ['All Departments', 'Manned Guarding', 'Mobile Patrol', 'CCTV Monitoring', 'Event Security', 'VIP Protection', 'Access Control', 'Reception Security', 'Industrial Security'];
 const STATUSES = ['All Status', 'On Duty', 'Off Duty', 'Leave'];
@@ -26,9 +25,9 @@ export default function GuardsPage() {
   const [form, setForm] = useState({ name: '', dept: 'Manned Guarding', position: '', nationality: 'Bahraini', joinDate: '', status: 'On Duty', cpr: 'Valid', visa: 'N/A', passport: 'Valid', assignedSite: '' });
 
   useEffect(() => {
-    Promise.all([getGuards(), getCollection('sites')])
-      .then(([g, s]) => { setGuards(g); setSites(s); setLoading(false); })
-      .catch(() => setLoading(false));
+    const unsubGuards = GuardsAPI.listen((data) => { setGuards(data); setLoading(false); });
+    const unsubSites = SitesAPI.listen((data) => { setSites(data); });
+    return () => { unsubGuards?.(); unsubSites?.(); };
   }, []);
 
   const getSiteName = (siteId) => {

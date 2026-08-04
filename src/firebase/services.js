@@ -59,6 +59,7 @@ export async function deleteFile(path) {
 // ── Named Collection APIs ────────────────────────────────
 export const GuardsAPI = {
   getAll: () => getCollection('guards'),
+  getById: (id) => getDocument('guards', id),
   add: (data) => addDocument('guards', data),
   update: (id, data) => updateDocument('guards', id, data),
   delete: (id) => deleteDocument('guards', id),
@@ -71,12 +72,123 @@ export const ClientsAPI = {
   add: (data) => addDocument('clients', data),
   update: (id, data) => updateDocument('clients', id, data),
   delete: (id) => deleteDocument('clients', id),
+  listen: (cb) => listenCollection('clients', cb),
 };
 
-export const SitesAPI = { getAll: () => getCollection('sites'), add: (data) => addDocument('sites', data), update: (id, data) => updateDocument('sites', id, data), delete: (id) => deleteDocument('sites', id) };
-export const AttendanceAPI = { getAll: () => getCollection('attendance'), clockIn: (guardId, data) => addDocument('attendance', { guardId, type: 'in', timestamp: serverTimestamp(), ...data }), clockOut: (guardId, data) => addDocument('attendance', { guardId, type: 'out', timestamp: serverTimestamp(), ...data }) };
-export const IncidentsAPI = { getAll: () => getCollection('incidents', orderBy('createdAt', 'desc')), add: (data) => addDocument('incidents', { ...data, status: 'Open', createdAt: serverTimestamp() }), update: (id, data) => updateDocument('incidents', id, data) };
-export const VehiclesAPI = { getAll: () => getCollection('vehicles'), add: (data) => addDocument('vehicles', data), update: (id, data) => updateDocument('vehicles', id, data) };
-export const NotificationsAPI = { getAll: () => getCollection('notifications', orderBy('createdAt', 'desc'), limit(20)), listen: (cb) => listenCollection('notifications', cb, orderBy('createdAt', 'desc'), limit(20)), markRead: (id) => updateDocument('notifications', id, { read: true }), add: (data) => addDocument('notifications', { ...data, read: false, createdAt: serverTimestamp() }) };
-export const CompanyAPI = { get: () => getCollection('company', limit(1)).then((r) => r[0] || null), update: (data) => getCollection('company', limit(1)).then((r) => { if (r[0]) { return setDocument('company', r[0].id, data); } return addDocument('company', data); }) };
-export const MarketingAPI = { getAll: () => getCollection('marketing', orderBy('createdAt', 'desc')), add: (data) => addDocument('marketing', { ...data, createdAt: serverTimestamp() }), update: (id, data) => updateDocument('marketing', id, data), delete: (id) => deleteDocument('marketing', id) };
+export const SitesAPI = {
+  getAll: () => getCollection('sites'),
+  add: (data) => addDocument('sites', data),
+  update: (id, data) => updateDocument('sites', id, data),
+  delete: (id) => deleteDocument('sites', id),
+  listen: (cb) => listenCollection('sites', cb),
+};
+
+export const AttendanceAPI = {
+  getAll: () => getCollection('attendance'),
+  clockIn: (guardId, data) => addDocument('attendance', { guardId, type: 'in', timestamp: serverTimestamp(), ...data }),
+  clockOut: (guardId, data) => addDocument('attendance', { guardId, type: 'out', timestamp: serverTimestamp(), ...data }),
+  listen: (cb) => listenCollection('attendance', cb),
+};
+
+export const IncidentsAPI = {
+  getAll: () => getCollection('incidents', orderBy('createdAt', 'desc')),
+  add: (data) => addDocument('incidents', { ...data, status: 'Open', createdAt: serverTimestamp() }),
+  update: (id, data) => updateDocument('incidents', id, data),
+  delete: (id) => deleteDocument('incidents', id),
+  listen: (cb) => listenCollection('incidents', cb, orderBy('createdAt', 'desc')),
+};
+
+export const VehiclesAPI = {
+  getAll: () => getCollection('vehicles'),
+  add: (data) => addDocument('vehicles', data),
+  update: (id, data) => updateDocument('vehicles', id, data),
+  delete: (id) => deleteDocument('vehicles', id),
+  listen: (cb) => listenCollection('vehicles', cb),
+};
+
+export const ShiftsAPI = {
+  getAll: () => getCollection('shifts'),
+  add: (data) => addDocument('shifts', data),
+  update: (id, data) => updateDocument('shifts', id, data),
+  delete: (id) => deleteDocument('shifts', id),
+  listen: (cb) => listenCollection('shifts', cb),
+};
+
+export const VisitorsAPI = {
+  getAll: () => getCollection('visitors'),
+  add: (data) => addDocument('visitors', data),
+  update: (id, data) => updateDocument('visitors', id, data),
+  delete: (id) => deleteDocument('visitors', id),
+  listen: (cb) => listenCollection('visitors', cb),
+};
+
+export const NotificationsAPI = {
+  getAll: () => getCollection('notifications', orderBy('createdAt', 'desc'), limit(20)),
+  listen: (cb) => listenCollection('notifications', cb, orderBy('createdAt', 'desc'), limit(20)),
+  markRead: (id) => updateDocument('notifications', id, { read: true }),
+  add: (data) => addDocument('notifications', { ...data, read: false, createdAt: serverTimestamp() }),
+  delete: (id) => deleteDocument('notifications', id),
+};
+
+export const CompanyAPI = {
+  get: () => getCollection('company', limit(1)).then((r) => r[0] || null),
+  update: (data) => getCollection('company', limit(1)).then((r) => { if (r[0]) { return setDocument('company', r[0].id, data); } return addDocument('company', data); }),
+  listen: (cb) => listenCollection('company', cb),
+};
+
+export const MarketingAPI = {
+  getAll: () => getCollection('marketing', orderBy('createdAt', 'desc')),
+  add: (data) => addDocument('marketing', { ...data, createdAt: serverTimestamp() }),
+  update: (id, data) => updateDocument('marketing', id, data),
+  delete: (id) => deleteDocument('marketing', id),
+  listen: (cb) => listenCollection('marketing', cb, orderBy('createdAt', 'desc')),
+};
+
+export const UsersAPI = {
+  getAll: () => getCollection('users'),
+  add: (data) => addDocument('users', data),
+  update: (id, data) => updateDocument('users', id, data),
+  delete: (id) => deleteDocument('users', id),
+  listen: (cb) => listenCollection('users', cb),
+};
+
+export const PatrolsAPI = {
+  getAll: () => getCollection('patrols'),
+  add: (data) => addDocument('patrols', data),
+  update: (id, data) => updateDocument('patrols', id, data),
+  delete: (id) => deleteDocument('patrols', id),
+  listen: (cb) => listenCollection('patrols', cb),
+};
+
+export const HrAPI = {
+  getEmployees: () => getCollection('employees'),
+  getInterviews: () => getCollection('interviews'),
+  addEmployee: (data) => addDocument('employees', data),
+  updateEmployee: (id, data) => updateDocument('employees', id, data),
+  deleteEmployee: (id) => deleteDocument('employees', id),
+  addInterview: (data) => addDocument('interviews', data),
+  deleteInterview: (id) => deleteDocument('interviews', id),
+  listenEmployees: (cb) => listenCollection('employees', cb),
+  listenInterviews: (cb) => listenCollection('interviews', cb),
+};
+
+export const FinanceAPI = {
+  getInvoices: () => getCollection('invoices'),
+  getQuotes: () => getCollection('quotes'),
+  addInvoice: (data) => addDocument('invoices', data),
+  addQuote: (data) => addDocument('quotes', data),
+  updateInvoice: (id, data) => updateDocument('invoices', id, data),
+  updateQuote: (id, data) => updateDocument('quotes', id, data),
+  deleteInvoice: (id) => deleteDocument('invoices', id),
+  deleteQuote: (id) => deleteDocument('quotes', id),
+  listenInvoices: (cb) => listenCollection('invoices', cb),
+  listenQuotes: (cb) => listenCollection('quotes', cb),
+};
+
+export const ComplaintsAPI = {
+  getAll: () => getCollection('complaints'),
+  add: (data) => addDocument('complaints', data),
+  update: (id, data) => updateDocument('complaints', id, data),
+  delete: (id) => deleteDocument('complaints', id),
+  listen: (cb) => listenCollection('complaints', cb),
+};

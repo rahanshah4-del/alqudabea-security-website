@@ -61,6 +61,10 @@ export default defineConfig({
             if (id.includes('firebase')) {
               return 'firebase';
             }
+            // Three.js — 3D globe (code-split, lazy-loaded)
+            if (id.includes('three')) {
+              return 'three';
+            }
             // Icons — split lucide-react into its own chunk
             if (id.includes('lucide-react')) {
               return 'icons';

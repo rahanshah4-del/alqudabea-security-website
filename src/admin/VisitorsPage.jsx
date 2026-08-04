@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { QrCode, Clock, Car, Plus, Download, X, Check, Search, LogOut, Trash2 } from 'lucide-react';
 import { SEO } from '@/components/SEO';
-import { getCollection, addDocument, updateDocument, deleteDocument } from '@/firebase/services';
+import { VisitorsAPI } from '@/firebase/services';
+import { addDocument, updateDocument, deleteDocument } from '@/firebase/services';
 
 export default function VisitorsPage() {
   const [visitors, setVisitors] = useState([]);
@@ -12,7 +13,8 @@ export default function VisitorsPage() {
   const [qrPass, setQrPass] = useState(null);
 
   useEffect(() => {
-    getCollection('visitors').then((data) => { setVisitors(data); setLoading(false); }).catch(() => setLoading(false));
+    const unsub = VisitorsAPI.listen((data) => { setVisitors(data); setLoading(false); });
+    return () => unsub?.();
   }, []);
 
   const filtered = visitors.filter((v) => v.name.toLowerCase().includes(search.toLowerCase()) || v.host.toLowerCase().includes(search.toLowerCase()));

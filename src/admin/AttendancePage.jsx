@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react';
 import { Clock, AlertTriangle, Download, MapPin, Search, UserCheck, UserX } from 'lucide-react';
 import { SEO } from '@/components/SEO';
 import { cn } from '@/utils/cn';
-import { getCollection, addDocument, getDocument } from '@/firebase/services';
+import { AttendanceAPI, GuardsAPI } from '@/firebase/services';
+import { addDocument } from '@/firebase/services';
 
 export default function AttendancePage() {
   const [records, setRecords] = useState([]);
@@ -12,9 +13,9 @@ export default function AttendancePage() {
   const [clocking, setClocking] = useState(null);
 
   useEffect(() => {
-    Promise.all([getCollection('attendance'), getCollection('guards')])
-      .then(([att, guards]) => { setRecords(att); setAllGuards(guards); setLoading(false); })
-      .catch(() => setLoading(false));
+    const unsubAtt = AttendanceAPI.listen((data) => { setRecords(data); setLoading(false); });
+    const unsubGuards = GuardsAPI.listen((data) => { setAllGuards(data); });
+    return () => { unsubAtt?.(); unsubGuards?.(); };
   }, []);
 
   const onTime = records.filter((r) => r.status === 'On Time').length;

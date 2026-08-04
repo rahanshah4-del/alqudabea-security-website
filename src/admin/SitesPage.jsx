@@ -1,9 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Search, Plus, Shield, MapPin, X, Trash2, Edit3, Check, Download, Users, ChevronDown, ChevronUp, UserPlus, UserMinus } from 'lucide-react';
 import { SEO } from '@/components/SEO';
-import { SitesAPI } from '@/firebase/services';
-import { getSites } from '@/admin/AdminData';
-import { getCollection, updateDocument } from '@/firebase/services';
+import { SitesAPI, GuardsAPI } from '@/firebase/services';
+import { updateDocument } from '@/firebase/services';
 import { cn } from '@/utils/cn';
 
 const TYPES = ['All Types', 'Commercial', 'Residential', 'Hospitality', 'Healthcare', 'Education', 'Industrial', 'Government', 'Banking'];
@@ -20,9 +19,9 @@ export default function SitesPage() {
   const [form, setForm] = useState({ name: '', type: 'Commercial', guards: 0, supervisor: '', address: '', status: 'Active', documents: 0 });
 
   useEffect(() => {
-    Promise.all([getSites(), getCollection('guards')])
-      .then(([s, g]) => { setSites(s); setGuards(g); setLoading(false); })
-      .catch(() => setLoading(false));
+    const unsubSites = SitesAPI.listen((data) => { setSites(data); setLoading(false); });
+    const unsubGuards = GuardsAPI.listen((data) => { setGuards(data); });
+    return () => { unsubSites?.(); unsubGuards?.(); };
   }, []);
 
   // Compute guard counts per site from actual assignments

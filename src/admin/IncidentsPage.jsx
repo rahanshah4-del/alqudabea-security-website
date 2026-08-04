@@ -14,7 +14,8 @@ export default function IncidentsPage() {
   const [form, setForm] = useState({ title: '', site: '', severity: 'Medium', officer: '', description: '', status: 'Open' });
 
   useEffect(() => {
-    IncidentsAPI.getAll().then((data) => { setIncidents(data); setLoading(false); }).catch(() => setLoading(false));
+    const unsub = IncidentsAPI.listen((data) => { setIncidents(data); setLoading(false); });
+    return () => unsub?.();
   }, []);
 
   const openAdd = () => { setEditId(null); setForm({ title: '', site: '', severity: 'Medium', officer: '', description: '', status: 'Open' }); setShowForm(true); };

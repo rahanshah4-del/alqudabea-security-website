@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router';
 import { Shield, AlertTriangle, Car, MapPin, Thermometer, Search, Users, Building2, TrendingUp, Download, UserPlus, Plus, QrCode, Clock, FileText, Sun, Bell, MessageSquare, Send, X, Cloud, RefreshCw } from 'lucide-react';
 import { SEO } from '@/components/SEO';
-import { getGuards, getClients, getSites } from '@/admin/AdminData';
-import { getCollection, addDocument, updateDocument, deleteDocument } from '@/firebase/services';
+import { GuardsAPI, ClientsAPI, SitesAPI, PatrolsAPI, IncidentsAPI, MarketingAPI, ComplaintsAPI } from '@/firebase/services';
+import { addDocument, updateDocument, deleteDocument } from '@/firebase/services';
 import { cn } from '@/utils/cn';
 
 function LiveClock() {
@@ -23,9 +23,15 @@ export default function CommandPage() {
   const [search, setSearch] = useState('');
 
   useEffect(() => {
-    Promise.all([getGuards(), getClients(), getSites(), getCollection('marketing'), getCollection('patrols'), getCollection('incidents')])
-      .then(([g, c, s, m, p, i]) => { setGuards(g); setClients(c); setSites(s); setMarketingLeads(m); setPatrols(p); setIncidents(i); setLoading(false); })
-      .catch(() => setLoading(false));
+    const unsubs = [
+      GuardsAPI.listen((d) => { setGuards(d); setLoading(false); }),
+      ClientsAPI.listen(setClients),
+      SitesAPI.listen(setSites),
+      MarketingAPI.listen(setMarketingLeads),
+      PatrolsAPI.listen(setPatrols),
+      IncidentsAPI.listen(setIncidents),
+    ];
+    return () => unsubs.forEach((u) => u?.());
   }, []);
 
   const onDuty = guards.filter((g) => g.status === 'On Duty');
@@ -170,7 +176,8 @@ function ComplaintSection() {
   const [complaintsLoaded, setComplaintsLoaded] = useState(false);
 
   useEffect(() => {
-    getCollection('complaints').then((data) => { setComplaints(data); setComplaintsLoaded(true); }).catch(() => setComplaintsLoaded(true));
+    const unsub = ComplaintsAPI.listen((data) => { setComplaints(data); setComplaintsLoaded(true); });
+    return () => unsub?.();
   }, []);
   const [newComplaint, setNewComplaint] = useState({ subject: '', priority: 'Medium', notes: '' });
   const [complaintSearch, setComplaintSearch] = useState('');
