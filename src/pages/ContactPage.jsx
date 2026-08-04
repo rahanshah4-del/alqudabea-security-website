@@ -47,7 +47,7 @@ const CONTACT_INFO = {
     line2: 'Block 912, Riffa/Al Gharbi, Bahrain',
   },
   phone: '+973 7790 7878',
-  email: 'info@alqudabeasecurity.online',
+  email: 'info@alqudabeass.com',
   hours: [
     { days: 'Sunday — Thursday', time: '08:00 — 17:00' },
     { days: 'Operations Centre', time: '24/7' },
@@ -233,7 +233,7 @@ function QuickCTAs() {
     {
       icon: Mail,
       label: 'Email Us',
-      href: 'mailto:info@alqudabeasecurity.online',
+      href: 'mailto:info@alqudabeass.com',
       variant: 'secondary',
     },
   ];

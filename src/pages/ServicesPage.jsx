@@ -58,6 +58,7 @@ const SERVICE_COLORS = [
   { from: '#F97316', to: '#C2410C', glow: 'rgba(249,115,22,0.3)', bg: 'from-orange-500/15 to-orange-600/5' },
   { from: '#3B82F6', to: '#1E40AF', glow: 'rgba(59,130,246,0.3)', bg: 'from-blue-500/15 to-blue-600/5' },
   { from: '#22C55E', to: '#15803D', glow: 'rgba(34,197,94,0.3)', bg: 'from-green-500/15 to-green-600/5' },
+  { from: '#EC4899', to: '#BE185D', glow: 'rgba(236,72,153,0.3)', bg: 'from-pink-500/15 to-pink-600/5' },
 ];
 
 // ── Trust Bar ─────────────────────────────────────────────
@@ -139,9 +140,9 @@ function ServicesGrid() {
           </p>
         </motion.div>
 
-        <motion.div variants={staggerContainer} initial="hidden" animate={inView ? 'visible' : 'hidden'} className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+        <motion.div variants={staggerContainer} initial="hidden" animate={inView ? 'visible' : 'hidden'} className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {SERVICES.map((service, i) => {
-            const color = SERVICE_COLORS[i];
+            const color = SERVICE_COLORS[i % SERVICE_COLORS.length];
             const Icon = service.icon;
             return (
               <motion.div key={service.id} variants={cardReveal} custom={i}>
@@ -152,7 +153,7 @@ function ServicesGrid() {
                     background: `linear-gradient(160deg, ${color.from}10, ${color.to}05)`,
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.borderColor = `${color.from  }60`;
+                    e.currentTarget.style.borderColor = `${color.from}60`;
                     e.currentTarget.style.boxShadow = `0 0 40px ${color.glow}, 0 8px 24px rgba(0,0,0,0.3)`;
                     e.currentTarget.style.transform = 'translateY(-4px)';
                     e.currentTarget.style.background = `linear-gradient(160deg, ${color.from}20, ${color.to}10)`;
@@ -168,7 +169,7 @@ function ServicesGrid() {
                   <div className="absolute -top-6 -right-6 h-16 w-16 rounded-full opacity-0 blur-2xl transition-opacity duration-400 group-hover:opacity-100" style={{ background: color.from }} />
 
                   {/* Icon container */}
-                  <div className="relative z-10 flex h-16 w-16 items-center justify-center rounded-2xl border transition-all duration-400" style={{ background: `linear-gradient(135deg, ${color.from}20, ${color.to}10)`, borderColor: `${color.from  }30` }}>
+                  <div className="relative z-10 flex h-16 w-16 items-center justify-center rounded-2xl border transition-all duration-400" style={{ background: `linear-gradient(135deg, ${color.from}20, ${color.to}10)`, borderColor: `${color.from}30` }}>
                     <Icon className="h-7 w-7 transition-all duration-400 group-hover:scale-110" style={{ color: color.from }} aria-hidden="true" />
                   </div>
 
@@ -201,7 +202,7 @@ function ServiceSection({ service, index }) {
   const inView = useInView(ref, { once: true, margin: '-80px' });
   const isEven = index % 2 === 0;
   const Icon = service.icon;
-  const color = SERVICE_COLORS[index];
+  const color = SERVICE_COLORS[index % SERVICE_COLORS.length];
 
   return (
     <section ref={ref} id={service.id} className={cn('py-16 lg:py-24', !isEven && 'bg-surface-muted/40')}>
@@ -215,7 +216,7 @@ function ServiceSection({ service, index }) {
           {/* Content */}
           <div className={cn(!isEven && 'lg:order-2')}>
             <div className="mb-6 flex items-center gap-3">
-              <div className="flex h-14 w-14 items-center justify-center rounded-2xl border transition-all duration-300" style={{ background: `linear-gradient(135deg, ${color.from}25, ${color.to}10)`, borderColor: `${color.from  }40`, boxShadow: `0 0 20px ${color.glow}` }}>
+              <div className="flex h-14 w-14 items-center justify-center rounded-2xl border transition-all duration-300" style={{ background: `linear-gradient(135deg, ${color.from}25, ${color.to}10)`, borderColor: `${color.from}40`, boxShadow: `0 0 20px ${color.glow}` }}>
                 <Icon className="h-7 w-7" style={{ color: color.from }} aria-hidden="true" />
               </div>
               <span className="font-mono text-xs font-medium tracking-wider text-neutral-600 uppercase">Service {String(index + 1).padStart(2, '0')}</span>
@@ -243,9 +244,9 @@ function ServiceSection({ service, index }) {
           </div>
 
           {/* Visual Card */}
-          <motion.div variants={scaleReveal} initial="hidden" animate={inView ? 'visible' : 'hidden'} className={cn('relative overflow-hidden rounded-3xl border p-8 flex items-center justify-center h-72 lg:h-96', !isEven && 'lg:order-1')} style={{ background: `linear-gradient(160deg, ${color.from}10, ${color.to}05)`, borderColor: `${color.from  }20` }}>
+          <motion.div variants={scaleReveal} initial="hidden" animate={inView ? 'visible' : 'hidden'} className={cn('relative overflow-hidden rounded-3xl border p-8 flex items-center justify-center h-72 lg:h-96', !isEven && 'lg:order-1')} style={{ background: `linear-gradient(160deg, ${color.from}10, ${color.to}05)`, borderColor: `${color.from}20` }}>
             <div className="pointer-events-none absolute inset-0" style={{ background: `radial-gradient(circle at 50% 50%, ${color.from}15, transparent 70%)` }} aria-hidden="true" />
-            <div className="relative flex h-36 w-36 items-center justify-center rounded-3xl border" style={{ background: `linear-gradient(135deg, ${color.from}20, ${color.to}10)`, borderColor: `${color.from  }30`, boxShadow: `0 0 50px ${color.glow}` }}>
+            <div className="relative flex h-36 w-36 items-center justify-center rounded-3xl border" style={{ background: `linear-gradient(135deg, ${color.from}20, ${color.to}10)`, borderColor: `${color.from}30`, boxShadow: `0 0 50px ${color.glow}` }}>
               <Icon className="h-18 w-18" style={{ color: color.from, width: '70px', height: '70px' }} aria-hidden="true" />
             </div>
             <div className="absolute top-6 right-6 flex gap-2" aria-hidden="true">

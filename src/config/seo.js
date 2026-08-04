@@ -65,7 +65,7 @@ export const ORGANIZATION_SCHEMA = {
     '@type': 'ContactPoint',
     contactType: 'Sales',
     telephone: '+973-7790-7878',
-    email: 'info@alqudabeasecurity.online',
+    email: 'info@alqudabeass.com',
     availableLanguage: ['English', 'Arabic'],
   },
   sameAs: ['https://linkedin.com/company/alqudabea'],
@@ -102,7 +102,7 @@ export const LOCAL_BUSINESS_SCHEMA = {
     '@type': 'ContactPoint',
     contactType: 'Sales',
     telephone: '+973-7790-7878',
-    email: 'info@alqudabeasecurity.online',
+    email: 'info@alqudabeass.com',
   },
 };
 

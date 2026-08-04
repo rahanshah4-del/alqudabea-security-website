@@ -31,8 +31,8 @@ export function Footer() {
                 <a href="tel:+97377907878" className="inline-flex items-center gap-1.5 rounded-lg border border-white/[0.06] bg-white/[0.03] px-3 py-2 text-xs font-medium text-neutral-400 transition-colors hover:border-accent-500/30 hover:text-neutral-200">
                   <Phone className="h-3 w-3" /> Call
                 </a>
-                <a href="mailto:info@alqudabeasecurity.online" className="inline-flex items-center gap-1.5 rounded-lg border border-white/[0.06] bg-white/[0.03] px-3 py-2 text-xs font-medium text-neutral-400 transition-colors hover:border-accent-500/30 hover:text-neutral-200">
-                  <Mail className="h-3 w-3" /> info@alqudabeasecurity.online
+                <a href="mailto:info@alqudabeass.com" className="inline-flex items-center gap-1.5 rounded-lg border border-white/[0.06] bg-white/[0.03] px-3 py-2 text-xs font-medium text-neutral-400 transition-colors hover:border-accent-500/30 hover:text-neutral-200">
+                  <Mail className="h-3 w-3" /> info@alqudabeass.com
                 </a>
                 <a href="https://wa.me/97377907878" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 rounded-lg border border-white/[0.06] bg-white/[0.03] px-3 py-2 text-xs font-medium text-neutral-400 transition-colors hover:border-accent-500/30 hover:text-neutral-200">
                   <MessageCircle className="h-3 w-3" /> WhatsApp
@@ -65,7 +65,7 @@ export function Footer() {
                 </li>
                 <li className="flex items-start gap-2.5">
                   <Mail className="mt-0.5 h-3.5 w-3.5 shrink-0 text-neutral-600" />
-                  <a href="mailto:info@alqudabeasecurity.online" className="text-sm text-neutral-400 transition-colors hover:text-neutral-200">info@alqudabeasecurity.online</a>
+                  <a href="mailto:info@alqudabeass.com" className="text-sm text-neutral-400 transition-colors hover:text-neutral-200">info@alqudabeass.com</a>
                 </li>
                 <li className="flex items-start gap-2.5">
                   <Mail className="mt-0.5 h-3.5 w-3.5 shrink-0 text-neutral-600" />

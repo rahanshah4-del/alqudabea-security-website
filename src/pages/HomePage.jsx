@@ -1,6 +1,7 @@
 import { SEO } from '@/components/SEO';
 import { HeroSection } from '@/pages/home/HeroSection';
 import { TrustBar } from '@/pages/home/TrustBar';
+import { GuardsShowcase } from '@/pages/home/GuardsShowcase';
 import { ServicesOverview } from '@/pages/home/ServicesOverview';
 import { AboutPreview } from '@/pages/home/AboutPreview';
 import { WhyChooseUs } from '@/pages/home/WhyChooseUs';
@@ -39,6 +40,7 @@ export function HomePage() {
 
       <HeroSection />
       <TrustBar />
+      <GuardsShowcase />
       <ServicesOverview />
       <AboutPreview />
       <CompanyStats />

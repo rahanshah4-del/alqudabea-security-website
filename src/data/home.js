@@ -8,9 +8,10 @@
 import {
   Shield,
   Building2,
-  Camera,
-  Lock,
-  Server,
+  Car,
+  Video,
+  CalendarCheck,
+  UserCheck,
   Globe,
   Hospital,
   Building,
@@ -21,8 +22,6 @@ import {
   Star,
   Award,
   Clock,
-  HeadphonesIcon,
-  Eye,
   Gauge,
 } from 'lucide-react';
 
@@ -74,42 +73,42 @@ export const SERVICES = {
       icon: Shield,
       title: 'Manned Guarding',
       description:
-        'Highly trained, licensed security personnel for corporate offices, government buildings, and private facilities.',
+        'Highly trained, GTS-licensed security personnel for corporate offices, government buildings, and private facilities across Bahrain.',
       href: '/services',
     },
     {
-      icon: Camera,
-      title: 'CCTV & Surveillance',
+      icon: Car,
+      title: 'Mobile Patrol',
       description:
-        'Advanced monitoring systems with Nexora AI-powered detection, remote access, and 24/7 surveillance operations.',
+        'GPS-tracked security vehicles conducting scheduled and random patrols with rapid alarm response across all zones.',
       href: '/services',
     },
     {
-      icon: Lock,
-      title: 'Access Control',
+      icon: CalendarCheck,
+      title: 'Event Security',
       description:
-        'Biometric and card-based entry systems with real-time monitoring and comprehensive audit trails.',
+        'Comprehensive event security planning, crowd management, and VIP protection for corporate and private occasions.',
       href: '/services',
     },
     {
-      icon: Server,
-      title: 'Cybersecurity',
+      icon: Video,
+      title: 'CCTV Operators & Installation',
       description:
-        'Enterprise-grade digital protection including network security, threat detection, and incident response.',
+        'Professional installation and 24/7 manned monitoring with Nexora AI-powered analytics and remote access.',
       href: '/services',
     },
     {
-      icon: Eye,
-      title: 'Risk Assessment',
+      icon: Building2,
+      title: 'Corporate Security',
       description:
-        'Comprehensive security audits and vulnerability assessments for existing and planned facilities.',
+        'Integrated corporate security programs combining guarding, electronic systems, and executive protection.',
       href: '/services',
     },
     {
-      icon: HeadphonesIcon,
-      title: 'Alarm Monitoring',
+      icon: UserCheck,
+      title: 'Personal Security',
       description:
-        '24/7 central monitoring station with rapid response protocols for intrusion, fire, and emergency alarms.',
+        'Discreet close protection by ex-military officers with defensive driving and advance route planning.',
       href: '/services',
     },
   ],
@@ -125,7 +124,7 @@ export const ABOUT = {
   ],
   stats: [
     { value: 'CR 176298-1', label: 'Active Registration' },
-    { value: '7', label: 'Core Services' },
+    { value: '11', label: 'Core Services' },
     { value: '24/7', label: 'Operations' },
   ],
   cta: { label: 'Learn About Us', href: '/about' },
@@ -214,7 +213,7 @@ export const CTA = {
   },
   contact: {
     phone: '+973 7790 7878',
-    email: 'info@alqudabeasecurity.online',
+    email: 'info@alqudabeass.com',
   },
 };
 

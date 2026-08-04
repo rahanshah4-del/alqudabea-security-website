@@ -27,6 +27,7 @@ const SearchPage = lazy(() => import('@/pages/SearchPage'));
 const QuotePage = lazy(() => import('@/pages/QuotePage'));
 const LoginPage = lazy(() => import('@/pages/LoginPage'));
 const CatalogPage = lazy(() => import('@/pages/CatalogPage'));
+const GalleryPage = lazy(() => import('@/pages/GalleryPage'));
 const DashboardPage = lazy(() => import('@/admin/DashboardPage'));
 const CommandPage = lazy(() => import('@/admin/CommandPage'));
 const GuardsPage = lazy(() => import('@/admin/GuardsPage'));
@@ -59,6 +60,7 @@ const prefetchMap = {
   '/blog': () => import('@/pages/BlogPage'),
   '/search': () => import('@/pages/SearchPage'),
   '/quote': () => import('@/pages/QuotePage'),
+  '/gallery': () => import('@/pages/GalleryPage'),
 };
 
 /**
@@ -112,6 +114,7 @@ export default function App() {
         <Route path="industries" element={<PageSuspense><IndustriesPage /></PageSuspense>} />
         <Route path="contact" element={<PageSuspense><ContactPage /></PageSuspense>} />
         <Route path="catalog" element={<PageSuspense><CatalogPage /></PageSuspense>} />
+        <Route path="gallery" element={<PageSuspense><GalleryPage /></PageSuspense>} />
         <Route path="careers" element={<PageSuspense><CareersPage /></PageSuspense>} />
         <Route path="careers/:jobId" element={<PageSuspense><CareerDetailsPage /></PageSuspense>} />
         <Route path="careers/:jobId/apply" element={<PageSuspense><JobApplicationPage /></PageSuspense>} />

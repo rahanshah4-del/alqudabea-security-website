@@ -320,7 +320,7 @@ export default function CatalogPage() {
               </p>
               <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
                 <a
-                  href="mailto:info@alqudabeasecurity.online?subject=Catalog Request"
+                  href="mailto:info@alqudabeass.com?subject=Catalog Request"
                   className="flex items-center gap-2 rounded-xl bg-accent-500 px-5 py-3 text-sm font-medium text-white transition-all hover:bg-accent-400"
                 >
                   <Mail className="h-4 w-4" /> Email Request

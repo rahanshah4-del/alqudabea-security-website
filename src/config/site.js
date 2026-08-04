@@ -22,7 +22,7 @@ export const SITE = {
   },
   contact: {
     phone: ['+973 7790 7878', '+973 3445 2144', '+973 3456 9393'],
-    email: 'info@alqudabeasecurity.online',
+    email: 'info@alqudabeass.com',
     emailSecurity: 'security@alqudabeasecurity.online',
     emailHelp: 'help@alqudabeasecurity.online',
     emailAI: 'ai@alqudabeasecurity.online',
@@ -36,6 +36,7 @@ export const NAVIGATION = {
     { label: 'Services', href: '/services' },
     { label: 'Industries', href: '/industries' },
     { label: 'Blog', href: '/blog' },
+    { label: 'Gallery', href: '/gallery' },
     { label: 'About', href: '/about' },
     { label: 'Contact', href: '/contact' },
     { label: 'Company Profile', href: '/catalog' },
