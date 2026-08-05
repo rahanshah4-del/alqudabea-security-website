@@ -1,68 +1,27 @@
-import { lazy, Suspense } from 'react';
 import { Link } from 'react-router';
 import { motion } from 'framer-motion';
 import { ArrowRight, ChevronDown, Shield } from 'lucide-react';
 import { Container } from '@/components/Container';
 import { Button } from '@/components/Button';
+import { GuardSlider } from '@/pages/home/GuardSlider';
 import { HERO } from '@/data/home';
 import { APPLE_EASE } from '@/hooks/useScrollReveal';
 
-// Lazy-load Three.js globe — never blocks initial render
-const GlobeBackground = lazy(() => import('@/components/GlobeBackground'));
-
 /**
- * Apple-Style Premium Hero.
+ * Premium Hero with Guard Showcase Slider.
  *
- * Clean light background, ultra-subtle 3D globe behind the heading,
- * crisp typography with precise color grading, generous whitespace.
- * Enterprise security brand positioning — Fortune 500 ready.
+ * Auto-playing security guard image slider as the full-bleed background.
+ * Dark gradient overlay ensures crisp text readability. Gold accent
+ * typography with generous whitespace. Enterprise security positioning.
  */
 export function HeroSection() {
   return (
     <section
-      className="relative flex min-h-[100svh] items-center justify-center overflow-hidden"
+      className="relative flex min-h-[100svh] items-center justify-center overflow-hidden bg-black"
       aria-labelledby="hero-heading"
     >
-      {/* ── Background ──────────────────────────────────── */}
-      <div
-        className="pointer-events-none absolute inset-0"
-        style={{
-          background: `linear-gradient(180deg, #FFFFFF 0%, #FFFDF5 45%, #FFFFFF 100%)`,
-        }}
-        aria-hidden="true"
-      />
-
-      {/* ── 3D Globe Layer ──────────────────────────────── */}
-      <div
-        className="pointer-events-none absolute inset-0 flex items-center justify-center overflow-hidden select-none"
-        aria-hidden="true"
-        style={{ zIndex: 1 }}
-      >
-        {/* Soft radial glow behind globe */}
-        <div
-          className="absolute rounded-full blur-[80px]"
-          style={{
-            width: 'min(1100px, 100vw)',
-            height: 'min(1100px, 100vw)',
-            background: 'radial-gradient(circle, rgba(212,175,55,0.12) 0%, rgba(245,158,11,0.06) 30%, rgba(212,175,55,0.03) 55%, transparent 70%)',
-          }}
-        />
-
-        {/* Globe canvas */}
-        <div
-          className="absolute flex items-center justify-center"
-          style={{
-            width: 'clamp(340px, 88vw, 820px)',
-            height: 'clamp(340px, 88vw, 820px)',
-            maxWidth: '100vw',
-            maxHeight: '100vh',
-          }}
-        >
-          <Suspense fallback={null}>
-            <GlobeBackground />
-          </Suspense>
-        </div>
-      </div>
+      {/* ── Guard Image Slider (Background) ──────────────── */}
+      <GuardSlider />
 
       {/* ── Content ──────────────────────────────────────── */}
       <Container size="small" className="relative z-10">
@@ -73,15 +32,15 @@ export function HeroSection() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: APPLE_EASE }}
           >
-            <span className="inline-flex items-center gap-2 rounded-full border border-black/8 bg-black/[0.02] px-4 py-1.5">
+            <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 backdrop-blur-md">
               <Shield className="h-3.5 w-3.5 text-[#D4AF37]" aria-hidden="true" />
-              <span className="font-sans text-[0.6875rem] font-medium tracking-[0.15em] text-neutral-500 uppercase">
+              <span className="font-sans text-[0.6875rem] font-medium tracking-[0.15em] text-white/80 uppercase">
                 {HERO.badge}
               </span>
             </span>
           </motion.div>
 
-          {/* H1 — Crisp Apple-style typography */}
+          {/* H1 — Premium Gold + White typography */}
           <motion.h1
             id="hero-heading"
             initial={{ opacity: 0, y: 12 }}
@@ -98,11 +57,11 @@ export function HeroSection() {
               {HERO.heading.line1}
             </span>
             <br />
-            <span style={{ color: '#111111' }}>
+            <span style={{ color: '#FFFFFF' }}>
               SECURITY
             </span>
             <br />
-            <span style={{ color: '#111111' }}>
+            <span style={{ color: '#FFFFFF' }}>
               SERVICES W.L.L.
             </span>
           </motion.h1>
@@ -112,7 +71,7 @@ export function HeroSection() {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.3, ease: APPLE_EASE }}
-            className="mt-8 sm:mt-10 max-w-2xl font-sans text-base sm:text-lg leading-relaxed text-neutral-500 antialiased"
+            className="mt-8 sm:mt-10 max-w-2xl font-sans text-base sm:text-lg leading-relaxed text-white/70 antialiased"
             style={{ WebkitFontSmoothing: 'antialiased' }}
           >
             {HERO.subheading}
@@ -141,10 +100,10 @@ export function HeroSection() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.6, delay: 1.3 }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2"
+        className="absolute bottom-8 left-1/2 z-20 -translate-x-1/2"
         aria-hidden="true"
       >
-        <ChevronDown className="h-5 w-5 animate-bounce text-neutral-300" />
+        <ChevronDown className="h-5 w-5 animate-bounce text-white/50" />
       </motion.div>
     </section>
   );
