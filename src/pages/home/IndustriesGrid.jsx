@@ -12,7 +12,7 @@ import { APPLE_EASE } from '@/hooks/useScrollReveal';
  */
 
 const INDUSTRY_COLORS = [
-  { from: '#3B82F6', to: '#1D4ED8', glow: 'rgba(59,130,246,0.3)' },
+  { from: '#D4AF37', to: '#8B7200', glow: 'rgba(212,175,55,0.3)' },
   { from: '#6366F1', to: '#4338CA', glow: 'rgba(99,102,241,0.3)' },
   { from: '#10B981', to: '#047857', glow: 'rgba(16,185,129,0.3)' },
   { from: '#F59E0B', to: '#B45309', glow: 'rgba(245,158,11,0.3)' },

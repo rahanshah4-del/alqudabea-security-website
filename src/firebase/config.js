@@ -25,12 +25,24 @@ let db = null;
 let storage = null;
 let analytics = null;
 
+// Log which env vars are present (without exposing values)
+if (typeof window !== 'undefined') {
+  const missing = [];
+  if (!firebaseConfig.apiKey) missing.push('VITE_FIREBASE_API_KEY');
+  if (!firebaseConfig.authDomain) missing.push('VITE_FIREBASE_AUTH_DOMAIN');
+  if (!firebaseConfig.projectId) missing.push('VITE_FIREBASE_PROJECT_ID');
+  if (missing.length > 0) {
+    console.warn(`[Firebase] Missing env vars: ${missing.join(', ')}. Auth will not work.`);
+  }
+}
+
 try {
   if (firebaseConfig.apiKey) {
     app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
     auth = getAuth(app);
     db = getFirestore(app);
     storage = getStorage(app);
+    console.log('[Firebase] Initialized successfully — project:', firebaseConfig.projectId);
     if (typeof window !== 'undefined') {
       isSupported().then((yes) => { if (yes) { analytics = getAnalytics(app); } });
     }
@@ -38,7 +50,7 @@ try {
     console.warn('[Firebase] Config missing — running without backend. Copy .env.example to .env for full features.');
   }
 } catch (e) {
-  console.error('[Firebase] Init failed:', e.message);
+  console.error('[Firebase] Init failed:', e.message, e);
 }
 
 export { auth, db, storage, analytics };

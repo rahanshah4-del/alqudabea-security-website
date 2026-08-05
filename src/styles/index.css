@@ -37,26 +37,26 @@
 
   /* ── Links ─────────────────────────── */
   --color-link-default: #111827;
-  --color-link-hover: #0071E3;
-  --color-link-active: #005FCC;
+  --color-link-hover: #B8960F;
+  --color-link-active: #8B7200;
 
   /* ── Borders ───────────────────────── */
   --color-border-default: #CECED2;
   --color-border-muted: #E0E0E5;
-  --color-border-accent: #0066CC;
+  --color-border-accent: #B8960F;
 
-  /* ── Accent (Apple Blue) ───────────── */
-  --color-accent-50: oklch(0.97 0.02 255);
-  --color-accent-100: oklch(0.93 0.05 255);
-  --color-accent-200: oklch(0.87 0.1 255);
-  --color-accent-300: oklch(0.78 0.15 255);
-  --color-accent-400: oklch(0.65 0.2 255);
-  --color-accent-500: #0071E3;
-  --color-accent-600: #0066CC;
-  --color-accent-700: #0055B3;
-  --color-accent-800: oklch(0.35 0.15 255);
-  --color-accent-900: oklch(0.25 0.08 255);
-  --color-accent-950: oklch(0.15 0.04 255);
+  /* ── Accent (Premium Gold) ─────────── */
+  --color-accent-50: oklch(0.97 0.03 85);
+  --color-accent-100: oklch(0.93 0.06 85);
+  --color-accent-200: oklch(0.87 0.1 85);
+  --color-accent-300: oklch(0.78 0.14 80);
+  --color-accent-400: oklch(0.68 0.16 75);
+  --color-accent-500: #D4AF37;
+  --color-accent-600: #B8960F;
+  --color-accent-700: #8B7200;
+  --color-accent-800: oklch(0.35 0.1 80);
+  --color-accent-900: oklch(0.25 0.07 75);
+  --color-accent-950: oklch(0.15 0.04 80);
 
   /* ── Cyan ───────────────────────────── */
   --color-cyan-50: oklch(0.97 0.01 195);
@@ -114,7 +114,7 @@
   --shadow-surface: 0 1px 3px 0 oklch(0 0 0 / 0.06);
   --shadow-raised: 0 4px 16px 0 oklch(0 0 0 / 0.08);
   --shadow-overlay: 0 8px 32px 0 oklch(0 0 0 / 0.12);
-  --shadow-glow-accent: 0 0 24px 0 oklch(0.55 0.22 255 / 0.18);
+  --shadow-glow-accent: 0 0 24px 0 rgba(212,175,55,0.25);
   --shadow-glow-success: 0 0 24px 0 oklch(0.55 0.22 155 / 0.18);
   --shadow-glow-danger: 0 0 24px 0 oklch(0.58 0.25 20 / 0.18);
 
@@ -144,26 +144,26 @@
 
   /* ── Links (Dark) ───────────────────── */
   --color-link-default: #E5E5EA;
-  --color-link-hover: #2997FF;
-  --color-link-active: #40A5FF;
+  --color-link-hover: #D4AF37;
+  --color-link-active: #E5C84D;
 
   /* ── Borders ───────────────────────── */
   --color-border-default: #38383A;
   --color-border-muted: #2C2C2E;
-  --color-border-accent: #2997FF;
+  --color-border-accent: #D4AF37;
 
-  /* ── Accent (Apple Blue — Dark) ────── */
-  --color-accent-50: oklch(0.15 0.04 255);
-  --color-accent-100: oklch(0.18 0.06 255);
-  --color-accent-200: oklch(0.22 0.08 255);
-  --color-accent-300: oklch(0.3 0.12 255);
-  --color-accent-400: oklch(0.45 0.18 255);
-  --color-accent-500: #2997FF;
-  --color-accent-600: #40A5FF;
-  --color-accent-700: oklch(0.65 0.2 255);
-  --color-accent-800: oklch(0.75 0.15 255);
-  --color-accent-900: oklch(0.85 0.08 255);
-  --color-accent-950: oklch(0.93 0.03 255);
+  /* ── Accent (Premium Gold — Dark) ──── */
+  --color-accent-50: oklch(0.15 0.04 80);
+  --color-accent-100: oklch(0.18 0.06 80);
+  --color-accent-200: oklch(0.22 0.08 80);
+  --color-accent-300: oklch(0.3 0.11 78);
+  --color-accent-400: oklch(0.5 0.15 75);
+  --color-accent-500: #D4AF37;
+  --color-accent-600: #E5C84D;
+  --color-accent-700: oklch(0.7 0.18 78);
+  --color-accent-800: oklch(0.78 0.12 80);
+  --color-accent-900: oklch(0.88 0.07 82);
+  --color-accent-950: oklch(0.95 0.03 82);
 
   /* ── Cyan (Dark) ───────────────────── */
   --color-cyan-50: oklch(0.12 0.03 195);
@@ -221,7 +221,7 @@
   --shadow-surface: 0 1px 3px 0 oklch(0 0 0 / 0.4);
   --shadow-raised: 0 4px 16px 0 oklch(0 0 0 / 0.5);
   --shadow-overlay: 0 8px 32px 0 oklch(0 0 0 / 0.6);
-  --shadow-glow-accent: 0 0 28px 0 oklch(0.55 0.22 255 / 0.35);
+  --shadow-glow-accent: 0 0 28px 0 rgba(212,175,55,0.4);
   --shadow-glow-success: 0 0 28px 0 oklch(0.55 0.22 155 / 0.35);
   --shadow-glow-danger: 0 0 28px 0 oklch(0.58 0.25 20 / 0.35);
 
@@ -428,7 +428,7 @@
 .card-premium:hover {
   transform: translateY(-3px);
   border-color: var(--color-accent-400);
-  box-shadow: 0 0 30px oklch(0.55 0.22 255 / 0.2), 0 8px 24px oklch(0 0 0 / 0.3);
+  box-shadow: 0 0 30px rgba(212,175,55,0.25), 0 8px 24px oklch(0 0 0 / 0.3);
 }
 
 .card-icon-container {
@@ -437,7 +437,7 @@
 
 .card-premium:hover .card-icon-container {
   border-color: var(--color-accent-400);
-  box-shadow: 0 0 16px oklch(0.55 0.22 255 / 0.2);
+  box-shadow: 0 0 16px rgba(212,175,55,0.25);
 }
 
 .hover-lift {
@@ -479,8 +479,8 @@
 }
 
 @keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 8px 0 oklch(0.55 0.2 255 / 0.12); }
-  50% { box-shadow: 0 0 24px 0 oklch(0.55 0.2 255 / 0.3); }
+  0%, 100% { box-shadow: 0 0 8px 0 rgba(212,175,55,0.15); }
+  50% { box-shadow: 0 0 24px 0 rgba(212,175,55,0.35); }
 }
 
 @keyframes float {
@@ -643,9 +643,9 @@ button.ghost:hover,
   overflow: hidden;
 }
 
-/* Gradient text — Apple-style blue-to-cyan */
+/* Gradient text — Premium gold-to-amber */
 @utility text-gradient {
-  background: linear-gradient(135deg, var(--color-accent-400) 0%, var(--color-accent-500) 40%, var(--color-cyan-400) 100%);
+  background: linear-gradient(135deg, #D4AF37 0%, #F59E0B 40%, #F97316 100%);
   -webkit-background-clip: text;
   color: transparent;
   background-clip: text;
@@ -676,9 +676,13 @@ button.ghost:hover,
   background-clip: text;
 }
 
-/* Card accent border top — blue */
+/* Card accent border top — gold */
 @utility card-accent-blue {
-  border-top: 3px solid #3B82F6;
+  border-top: 3px solid #D4AF37;
+}
+/* Card accent border top — gold (alias) */
+@utility card-accent-gold {
+  border-top: 3px solid #D4AF37;
 }
 /* Card accent border top — cyan */
 @utility card-accent-cyan {
@@ -703,7 +707,7 @@ button.ghost:hover,
 
 /* Gradient backgrounds for sections */
 @utility bg-gradient-premium {
-  background: linear-gradient(180deg, var(--color-surface-root) 0%, color-mix(in oklch, var(--color-accent-500), var(--color-surface-root) 95%) 50%, var(--color-surface-root) 100%);
+  background: linear-gradient(180deg, var(--color-surface-root) 0%, color-mix(in oklch, var(--color-accent-500) 8%, var(--color-surface-root) 92%) 50%, var(--color-surface-root) 100%);
 }
 
 @utility bg-gradient-warm {

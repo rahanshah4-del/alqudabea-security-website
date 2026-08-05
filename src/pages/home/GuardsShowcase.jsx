@@ -32,7 +32,7 @@ const GUARDS = [
     icon: Zap,
     src: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTAx9cmYECTTRSybe08mHZ_kJhTMOUM1C6m7dXTE694c85i-gFSYD0Qo1Ka&s=400',
     alt: 'Armed tactical response officer on duty',
-    color: { from: '#3B82F6', to: '#1D4ED8', glow: 'rgba(59,130,246,0.4)' },
+    color: { from: '#D4AF37', to: '#8B7200', glow: 'rgba(212,175,55,0.4)' },
     floatDuration: 3.8,
     floatDelay: 0.5,
     yOffset: -22,
@@ -87,7 +87,7 @@ export function GuardsShowcase() {
         aria-hidden="true"
         style={{
           background: `
-            radial-gradient(ellipse 60% 50% at 50% 50%, rgba(59,130,246,0.06) 0%, transparent 70%),
+            radial-gradient(ellipse 60% 50% at 50% 50%, rgba(212,175,55,0.08) 0%, transparent 70%),
             radial-gradient(ellipse 40% 60% at 20% 30%, rgba(139,92,246,0.04) 0%, transparent 60%),
             radial-gradient(ellipse 40% 60% at 80% 30%, rgba(6,182,212,0.04) 0%, transparent 60%)
           `,

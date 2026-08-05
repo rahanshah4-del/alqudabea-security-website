@@ -12,7 +12,7 @@ import { APPLE_EASE } from '@/hooks/useScrollReveal';
  */
 
 const CARD_COLORS = [
-  { from: '#3B82F6', to: '#1D4ED8', glow: 'rgba(59,130,246,0.35)' },
+  { from: '#D4AF37', to: '#8B7200', glow: 'rgba(212,175,55,0.35)' },
   { from: '#F59E0B', to: '#B45309', glow: 'rgba(245,158,11,0.35)' },
   { from: '#10B981', to: '#047857', glow: 'rgba(16,185,129,0.35)' },
   { from: '#8B5CF6', to: '#6D28D9', glow: 'rgba(139,92,246,0.35)' },

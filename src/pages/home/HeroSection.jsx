@@ -27,7 +27,7 @@ export function HeroSection() {
       <div
         className="pointer-events-none absolute inset-0"
         style={{
-          background: `linear-gradient(180deg, #FFFFFF 0%, #F8FBFF 45%, #FFFFFF 100%)`,
+          background: `linear-gradient(180deg, #FFFFFF 0%, #FFFDF5 45%, #FFFFFF 100%)`,
         }}
         aria-hidden="true"
       />
@@ -44,7 +44,7 @@ export function HeroSection() {
           style={{
             width: 'min(1100px, 100vw)',
             height: 'min(1100px, 100vw)',
-            background: 'radial-gradient(circle, rgba(10,132,255,0.10) 0%, rgba(58,190,255,0.05) 30%, rgba(10,132,255,0.02) 55%, transparent 70%)',
+            background: 'radial-gradient(circle, rgba(212,175,55,0.12) 0%, rgba(245,158,11,0.06) 30%, rgba(212,175,55,0.03) 55%, transparent 70%)',
           }}
         />
 
@@ -74,7 +74,7 @@ export function HeroSection() {
             transition={{ duration: 0.6, ease: APPLE_EASE }}
           >
             <span className="inline-flex items-center gap-2 rounded-full border border-black/8 bg-black/[0.02] px-4 py-1.5">
-              <Shield className="h-3.5 w-3.5 text-[#0A84FF]" aria-hidden="true" />
+              <Shield className="h-3.5 w-3.5 text-[#D4AF37]" aria-hidden="true" />
               <span className="font-sans text-[0.6875rem] font-medium tracking-[0.15em] text-neutral-500 uppercase">
                 {HERO.badge}
               </span>
@@ -94,7 +94,7 @@ export function HeroSection() {
               MozOsxFontSmoothing: 'grayscale',
             }}
           >
-            <span style={{ color: '#0A84FF' }}>
+            <span style={{ color: '#D4AF37' }}>
               {HERO.heading.line1}
             </span>
             <br />

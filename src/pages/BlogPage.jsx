@@ -18,7 +18,7 @@ const PAGE_DESC = 'Expert security insights, industry updates, regulatory guidan
 const BREADCRUMB = breadcrumbSchema([{ name: 'Home', url: '/' }, { name: 'Blog', url: '/blog' }]);
 
 const ACCENTS = [
-  { from: '#3B82F6', to: '#6366F1', bg: 'rgba(59,130,246,0.08)', border: 'rgba(59,130,246,0.2)' },
+  { from: '#3B82F6', to: '#6366F1', bg: 'rgba(212,175,55,0.08)', border: 'rgba(212,175,55,0.2)' },
   { from: '#10B981', to: '#34D399', bg: 'rgba(16,185,129,0.08)', border: 'rgba(16,185,129,0.2)' },
   { from: '#8B5CF6', to: '#A78BFA', bg: 'rgba(139,92,246,0.08)', border: 'rgba(139,92,246,0.2)' },
   { from: '#F59E0B', to: '#FBBF24', bg: 'rgba(245,158,11,0.08)', border: 'rgba(245,158,11,0.2)' },

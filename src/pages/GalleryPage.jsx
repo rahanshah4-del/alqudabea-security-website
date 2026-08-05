@@ -19,7 +19,7 @@ import { breadcrumbSchema } from '@/config/seo';
 const GALLERY_IMAGES = [
   {
     id: 1,
-    src: 'https://images.unsplash.com/photo-1617673677650-06c7f6b62e71?w=800&q=80',
+    src: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQhUkATQRmsjwmxDN3jo4_8wZEpns05EQV76qN6ipDdvQ&s=400',
     alt: 'Security guard on patrol duty',
     title: 'On Patrol',
     category: 'Operations',
@@ -27,7 +27,7 @@ const GALLERY_IMAGES = [
   },
   {
     id: 2,
-    src: 'https://images.pexels.com/photos/12304330/pexels-photo-12304330.jpeg?w=800',
+    src: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQYWQYFi60sUCvQVKdOCzM_QuJSD0fsb3SH-JVoTLMFQ&s=400',
     alt: 'Corporate security guard in professional uniform',
     title: 'Corporate Security',
     category: 'Commercial',
@@ -35,7 +35,7 @@ const GALLERY_IMAGES = [
   },
   {
     id: 3,
-    src: 'https://images.unsplash.com/photo-1614313913007-2b1b1b1b1b1b?w=600&q=80',
+    src: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSl5RZ7D_IhJzFnKBmas7p6Mfn0x79AfGXmptSsh0gC4jVWV8PzNSTxRtk&s=400',
     alt: 'Security team briefing session',
     title: 'Team Briefing',
     category: 'Training',
@@ -43,7 +43,7 @@ const GALLERY_IMAGES = [
   },
   {
     id: 4,
-    src: 'https://images.unsplash.com/photo-1558008258-3256797b42f3?w=600&q=80',
+    src: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSo84KWiOFV7Uh_FxNNXIv6u6clJZ9LD3eulxw0ueIRSGi3pht-a13Sk7Ac&s=400',
     alt: 'CCTV monitoring operations center',
     title: 'Command Center',
     category: 'Technology',
@@ -51,7 +51,7 @@ const GALLERY_IMAGES = [
   },
   {
     id: 5,
-    src: 'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=800&q=80',
+    src: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTjzx3BA9sqXi5oKnsEM6MbpujrJXCuxxH3BP6u8fbnHw&s=400',
     alt: 'Mobile patrol vehicle ready for deployment',
     title: 'Mobile Patrol',
     category: 'Operations',
@@ -59,7 +59,7 @@ const GALLERY_IMAGES = [
   },
   {
     id: 6,
-    src: 'https://images.unsplash.com/photo-1603201667141-5a2e7b4d3f05?w=600&q=80',
+    src: 'https://images.pexels.com/photos/31594272/pexels-photo-31594272/free-photo-of-security-guard-at-modern-entrance-booth-outdoors.jpeg?w=600',
     alt: 'Security guard at entrance checkpoint',
     title: 'Access Point',
     category: 'Commercial',
@@ -67,7 +67,7 @@ const GALLERY_IMAGES = [
   },
   {
     id: 7,
-    src: 'https://images.unsplash.com/photo-1573497620053-ea5300f94f21?w=600&q=80',
+    src: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTiZ-VePOxOjE-BE8YqrNuZLkmhTZbFOXZKtCBcXsDBbA&s=400',
     alt: 'Professional female security officer',
     title: 'VIP Protection',
     category: 'Executive',
@@ -75,7 +75,7 @@ const GALLERY_IMAGES = [
   },
   {
     id: 8,
-    src: 'https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=800&q=80',
+    src: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSvQl5eS65e_0p04objiiCroDzQGAXvts1_0bZ3pNs1Bg&s=400',
     alt: 'Security vehicle fleet',
     title: 'Fleet Operations',
     category: 'Operations',
@@ -91,7 +91,7 @@ const GALLERY_IMAGES = [
   },
   {
     id: 10,
-    src: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&q=80',
+    src: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTbbbkzyKcTuXKvLcX_X4Avz8p6FHiQ9_mpc57NQ038GySnCSnK3uYPEGI&s=400',
     alt: 'Event security coordination',
     title: 'Event Security',
     category: 'Events',
@@ -117,7 +117,7 @@ const GALLERY_IMAGES = [
 
 // ── Category filter colors ─────────────────────────────────
 const CATEGORY_COLORS = {
-  'Operations': { from: '#3B82F6', to: '#1D4ED8' },
+  'Operations': { from: '#D4AF37', to: '#8B7200' },
   'Commercial': { from: '#10B981', to: '#047857' },
   'Training': { from: '#8B5CF6', to: '#6D28D9' },
   'Technology': { from: '#06B6D4', to: '#0E7490' },
@@ -174,7 +174,7 @@ export default function GalleryPage() {
         {/* Background ambient glow */}
         <div
           className="pointer-events-none absolute -top-40 left-1/2 h-[500px] w-[800px] -translate-x-1/2 rounded-full opacity-[0.12] blur-[120px]"
-          style={{ background: 'radial-gradient(circle, #3B82F6, transparent 70%)' }}
+          style={{ background: 'radial-gradient(circle, #D4AF37, transparent 70%)' }}
           aria-hidden="true"
         />
 
@@ -341,7 +341,7 @@ export default function GalleryPage() {
                     className="pointer-events-none absolute -bottom-8 -right-8 h-24 w-24 rounded-full opacity-0 blur-2xl transition-all duration-500 group-hover:opacity-40"
                     style={{
                       background:
-                        CATEGORY_COLORS[image.category]?.from || '#3B82F6',
+                        CATEGORY_COLORS[image.category]?.from || '#D4AF37',
                     }}
                     aria-hidden="true"
                   />

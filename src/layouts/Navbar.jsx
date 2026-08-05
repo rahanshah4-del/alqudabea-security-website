@@ -80,7 +80,7 @@ export function Navbar() {
               <button
                 type="button"
                 className="flex h-12 w-12 items-center justify-center rounded-xl transition-all duration-300 hover:bg-surface-raised"
-                style={{ color: mobileOpen ? '#3B82F6' : undefined }}
+                style={{ color: mobileOpen ? '#D4AF37' : undefined }}
                 onClick={() => setMobileOpen((prev) => !prev)}
                 aria-expanded={mobileOpen}
                 aria-label={mobileOpen ? 'Close navigation menu' : 'Open navigation menu'}

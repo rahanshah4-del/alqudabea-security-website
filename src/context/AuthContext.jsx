@@ -17,6 +17,7 @@ export function AuthProvider({ children }) {
   // ── Firebase auth state listener ──────────────────────────
   useEffect(() => {
     if (!auth) {
+      console.warn('[Auth] Firebase Auth not initialized — check VITE_FIREBASE_* env vars and CSP.');
       setInitializing(false);
       return;
     }
@@ -45,6 +46,7 @@ export function AuthProvider({ children }) {
   // ── Login ────────────────────────────────────────────────
   const login = useCallback(async (email, password) => {
     if (!auth) {
+      console.error('[Auth] Login failed — auth instance is null. Env vars may be missing or CSP may block Firebase.');
       setError('Authentication service unavailable. Please check your connection.');
       return false;
     }

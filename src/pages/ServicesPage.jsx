@@ -48,7 +48,7 @@ const BREADCRUMB = breadcrumbSchema([{ name: 'Home', url: '/' }, { name: 'Servic
 // ── Color palette per service ─────────────────────────────
 
 const SERVICE_COLORS = [
-  { from: '#3B82F6', to: '#1D4ED8', glow: 'rgba(59,130,246,0.3)', bg: 'from-blue-500/15 to-blue-600/5' },
+  { from: '#D4AF37', to: '#8B7200', glow: 'rgba(212,175,55,0.3)', bg: 'from-amber-500/15 to-amber-600/5' },
   { from: '#6366F1', to: '#4338CA', glow: 'rgba(99,102,241,0.3)', bg: 'from-indigo-500/15 to-indigo-600/5' },
   { from: '#8B5CF6', to: '#6D28D9', glow: 'rgba(139,92,246,0.3)', bg: 'from-violet-500/15 to-violet-600/5' },
   { from: '#F59E0B', to: '#B45309', glow: 'rgba(245,158,11,0.3)', bg: 'from-amber-500/15 to-amber-600/5' },
@@ -56,7 +56,7 @@ const SERVICE_COLORS = [
   { from: '#10B981', to: '#047857', glow: 'rgba(16,185,129,0.3)', bg: 'from-emerald-500/15 to-emerald-600/5' },
   { from: '#0EA5E9', to: '#0369A1', glow: 'rgba(14,165,233,0.3)', bg: 'from-sky-500/15 to-sky-600/5' },
   { from: '#F97316', to: '#C2410C', glow: 'rgba(249,115,22,0.3)', bg: 'from-orange-500/15 to-orange-600/5' },
-  { from: '#3B82F6', to: '#1E40AF', glow: 'rgba(59,130,246,0.3)', bg: 'from-blue-500/15 to-blue-600/5' },
+  { from: '#D4AF37', to: '#B8960F', glow: 'rgba(212,175,55,0.3)', bg: 'from-amber-500/15 to-amber-600/5' },
   { from: '#22C55E', to: '#15803D', glow: 'rgba(34,197,94,0.3)', bg: 'from-green-500/15 to-green-600/5' },
   { from: '#EC4899', to: '#BE185D', glow: 'rgba(236,72,153,0.3)', bg: 'from-pink-500/15 to-pink-600/5' },
 ];
