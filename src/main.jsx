@@ -16,6 +16,11 @@ if (!rootElement) {
   throw new Error('Root element not found. Ensure index.html contains <div id="root"></div>.');
 }
 
+// Build info
+if (typeof __BUILD_TIME__ !== 'undefined') {
+  console.debug('Build:', __BUILD_TIME__);
+}
+
 // Initialize analytics (safe no-op if env vars not set)
 initAnalytics();
 

@@ -6,6 +6,10 @@ import { resolve } from 'path';
 const projectRoot = resolve(import.meta.dirname);
 
 export default defineConfig({
+  define: {
+    __BUILD_TIME__: JSON.stringify(new Date().toISOString()),
+  },
+
   plugins: [
     react({
       // Remove devtools in production

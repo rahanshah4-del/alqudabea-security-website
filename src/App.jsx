@@ -6,6 +6,8 @@ import { HomePage } from '@/pages/HomePage';
 import { AdminLayout } from '@/admin/AdminLayout';
 import { trackPageView } from '@/services/analytics';
 
+// v2 - cache bust
+
 /**
  * Application root.
  *
